@@ -9,8 +9,20 @@ npm run dev        # http://localhost:3000
 npm run typecheck
 ```
 
+**Живой прототип: https://morrison767.github.io/ean/**
+
 Вход: кнопка «Войти в демо-режиме» — пароль не проверяется, сеанс это флаг в
 localStorage.
+
+## Публикация
+
+Пушь в `main` → workflow `.github/workflows/deploy-pages.yml` собирает статику
+и публикует на GitHub Pages. Экспорт включается переменной `GITHUB_PAGES`;
+`basePath` подставляется из имени репозитория, поэтому workflow переносится
+в другой репозиторий без правок.
+
+Деплой идёт только с `main`: окружение `github-pages` не принимает публикацию
+с других веток.
 
 ## Стек
 
