@@ -1,0 +1,32 @@
+{
+  "search": {
+    "label": "Поиск",
+    "color": "text-[var(--ea-accent)]",
+    "bg": "bg-cyan-500/10",
+    "border": "border-cyan-500/20"
+  },
+  "view_profile": {
+    "label": "Просмотр досье",
+    "color": "text-indigo-400",
+    "bg": "bg-indigo-500/10",
+    "border": "border-indigo-500/20"
+  },
+  "export": {
+    "label": "Экспорт PDF",
+    "color": "text-amber-400",
+    "bg": "bg-amber-500/10",
+    "border": "border-amber-500/20"
+  },
+  "ai_analysis": {
+    "label": "AI-анализ",
+    "color": "text-purple-400",
+    "bg": "bg-purple-500/10",
+    "border": "border-purple-500/20"
+  },
+  "check": {
+    "label": "Проверка",
+    "color": "text-emerald-400",
+    "bg": "bg-emerald-500/10",
+    "border": "border-emerald-500/20"
+  }
+}

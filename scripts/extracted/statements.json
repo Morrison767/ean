@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ST-001",
+    "name": "Выписка_EIDE_2024.pdf",
+    "holder": "ТОО «EIDE Software Solutions»",
+    "holderBin": "000203302201",
+    "account": "KZ7286001A1234567890",
+    "period": "01.2023 — 12.2024",
+    "format": "PDF",
+    "status": "processed",
+    "txCount": 6,
+    "risk": "high",
+    "totalIn": 3120000000,
+    "totalOut": 2980000000,
+    "counterparties": 9
+  },
+  {
+    "id": "ST-002",
+    "name": "megatrade_2020-2022.xlsx",
+    "holder": "АО «МегаТрейд»",
+    "holderBin": "090940005432",
+    "account": "KZ1188002D1122334455",
+    "period": "01.2020 — 08.2022",
+    "format": "Excel",
+    "status": "processed",
+    "txCount": 5,
+    "risk": "high",
+    "totalIn": 22400000000,
+    "totalOut": 22100000000,
+    "counterparties": 14
+  },
+  {
+    "id": "ST-003",
+    "name": "duisenbaev_card.csv",
+    "holder": "Дүйсенбаев Понедельник Аманұлы",
+    "holderBin": "000203302201",
+    "account": "KZ5599012B0987654321",
+    "period": "01.2024 — 12.2024",
+    "format": "CSV",
+    "status": "processing",
+    "txCount": 0,
+    "risk": "medium",
+    "totalIn": 0,
+    "totalOut": 0,
+    "counterparties": 0
+  },
+  {
+    "id": "ST-004",
+    "name": "datacloud_2023.pdf",
+    "holder": "ТОО «ДатаКлауд Сервис»",
+    "holderBin": "180440012345",
+    "account": "KZ3194512C5566778899",
+    "period": "01.2023 — 12.2023",
+    "format": "PDF",
+    "status": "processed",
+    "txCount": 3,
+    "risk": "none",
+    "totalIn": 48000000000,
+    "totalOut": 41000000000,
+    "counterparties": 22
+  }
+]

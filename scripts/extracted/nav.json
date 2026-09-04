@@ -1,0 +1,46 @@
+[
+  {
+    "id": "search",
+    "label": "Досье",
+    "icon": "ge",
+    "active": [
+      "search",
+      "results",
+      "person",
+      "company",
+      "person-block"
+    ]
+  },
+  {
+    "id": "statements",
+    "label": "Выписки",
+    "icon": "se",
+    "active": [
+      "statements"
+    ]
+  },
+  {
+    "id": "esf",
+    "label": "ЭСФ",
+    "icon": "he",
+    "active": [
+      "esf"
+    ]
+  },
+  {
+    "id": "procurement",
+    "label": "Закупки",
+    "icon": "We",
+    "active": [
+      "procurement"
+    ]
+  },
+  {
+    "id": "ved",
+    "label": "ВЭД",
+    "icon": "_e",
+    "active": [
+      "ved"
+    ]
+  }
+]

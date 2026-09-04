@@ -1,0 +1,578 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Open Sans — шрифт дизайн-системы. Вариативный (300–800), поэтому одного файла
+ * на сабсет хватает на все начертания 400/500/600/700.
+ * Хостим локально: внешние шрифтовые CDN недоступны в опубликованной сборке.
+ */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("/fonts/open-sans-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@layer base {
+  /*
+   * Токены дизайн-системы (Figma: DESIGN SYSTEM — 2026).
+   * Цвета хранятся HSL-триплетами без обёртки hsl(), чтобы работали
+   * модификаторы прозрачности Tailwind: bg-primary/10, border-border/60 и т.д.
+   */
+  :root {
+    --font-open-sans: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto,
+      Arial, sans-serif;
+
+    /* Бренд */
+    --brand-50: 208 100% 97.1%;
+    --brand-100: 206.7 100% 92.9%;
+    /* Средние оттенки бренда: рамки и наведение у карточек разговора. */
+    --brand-200: 207.4 100% 85.3%;
+    --brand-300: 208.1 100% 73.1%;
+    --brand-400: 207.9 100% 61.6%;
+    --brand-500: 207.5 100% 51.2%;
+    --brand-600: 207.3 100% 43.9%;
+    --brand-700: 207.6 100% 37.1%;
+
+    /* Базовая семантика */
+    --background: 0 0% 100%;
+    --foreground: 210 29% 24.3%;
+    --card: 0 0% 100%;
+    /* Поверхность карточки — F9FAFB. Прозрачность задаётся в разметке
+       (bg-surface/20): цвет нужен и без неё, например под наведение. */
+    --surface: 210 20% 98%;
+    --card-foreground: 210 29% 24.3%;
+    --primary: 207.5 100% 51.2%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 210 29% 24.3%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 10.2% 46.3%;
+    --accent: 208 100% 97.1%;
+    --accent-foreground: 207.6 100% 37.1%;
+    --destructive: 357.1 96.3% 57.8%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%; /* border/default #E5E7EB */
+    --input: 220 13% 91%;
+    --ring: 207.5 100% 51.2%;
+
+    /*
+      Текст. Имена ролей взяты из ДС 2026, но утилиты Tailwind называются
+      иначе — занять text-secondary нельзя: в shadcn secondary это подложка
+      #F3F4F6, и утилита красила бы текст ею.
+
+        text/secondary  #99A1AF → text-subtle           выключенные состояния
+        text/quaternary #6A7282 → text-muted-foreground описания и подписи
+        text/disabled   #A1A1A1 → text-faint
+
+      Светлее не значит второстепеннее: в шкале ДС «secondary» светлее
+      «quaternary», поэтому для описания под заголовком берётся именно
+      quaternary, а subtle остаётся выключенным состояниям.
+
+      Своего токена text/quaternary здесь нет намеренно: это тот же цвет, что
+      --muted-foreground, и два имени на один цвет разошлись бы при первой же
+      правке.
+
+      Плейсхолдер набирается quaternary, а не secondary: 2,6:1 подсказку в
+      поле читать невозможно, и это единственный «серый» текст, который
+      человек должен прочесть до того, как начнёт печатать.
+    */
+    --text-secondary: 218.2 12.1% 64.3%;
+    --text-disabled: 0 0% 63.1%;
+    /*
+      Ссылка — brand/500 и brand/600 по ДС 2026 (text/link, text/link-hover).
+      Контраст на белом 3,4:1 — ниже AA для мелкого текста. Пробовали брать
+      brand/700 (5,8:1), но это расхождение с ДС по значению, а не наше
+      решение: вопрос вынесен их стороне вместе с красным и зелёным статусов.
+      Роль здесь названа, поэтому смена значения в ДС — правка одной строки.
+    */
+    --text-link: 207.5 100% 51.2%;
+    --text-link-hover: 207.3 100% 43.9%;
+    --text-success: 142.4 100% 32.5%;
+    --text-warning: 34.3 100% 32.5%; /* text/warning #A65F00 */
+    --text-danger: 357.1 96.3% 57.8%; /* text/danger #FB2C36 */
+
+    /* Подложки */
+    --bg-canvas: 220 14.3% 95.9%;
+    --bg-brand-subtle: 208 100% 97.1%;
+    --bg-success: 142.4 100% 32.5%;
+    --bg-success-subtle: 138.5 76.5% 96.7%; /* bg/success-subtle #F0FDF4 */
+    --bg-warning: 36.4 100% 49.8%;
+    --bg-warning-subtle: 48 100% 96.1%; /* bg/warning-subtle #FFFBEB */
+    --bg-danger: 357.1 96.3% 57.8%;
+    --bg-danger-subtle: 0 85.7% 97.3%;
+    --bg-badge: 220 13% 91%;
+    /* bg/overlay ДС — затемнение под шторками и модальными окнами.
+       Прозрачность задаётся в разметке: bg-overlay/50, bg-overlay/64. */
+    --bg-overlay: 220 42.9% 11%;
+
+    /* Поля ввода */
+    --input-text: 217.3 21.2% 26.9%; /* #364153 — введённое значение */
+    --input-helper: 213.3 3.8% 46.1%; /* #71757a — вспомогательный текст */
+
+    /* Границы */
+    --border-strong: 218.2 13.6% 84.1%;
+    /*
+      Рамка полей ввода. Намеренно темнее border/strong: на белой карточке
+      поле со светло-серой рамкой почти не читалось как поле.
+    */
+    --border-field: 218 13% 74%;
+    --border-focus: 207.5 100% 51.2%;
+    --border-success: 142.4 100% 32.5%;
+    --border-warning: 34.3 100% 32.5%; /* border/warning #A65F00 */
+    --border-danger: 357.1 96.3% 57.8%;
+
+    /*
+      Действия. Роли ДС 2026 целиком, включая те, что повторяют базовую
+      семантику: --action-primary равен --primary, а -fg — --primary-foreground.
+      Держим их именами роли, чтобы витрина кнопок читалась так же, как в
+      Figma; в разметке берутся утилиты primary/*.
+    */
+    --action-primary: 207.5 100% 51.2%;
+    --action-primary-hover: 207.3 100% 43.9%;
+    --action-primary-active: 207.6 100% 37.1%;
+    --action-primary-fg: 0 0% 100%;
+    --action-secondary: 0 0% 100%;
+    --action-secondary-hover: 210 20% 98%;
+    --action-secondary-fg: 210 29% 24.3%;
+    --action-danger: 357.1 100% 45.3%;
+    --action-danger-hover: 357.8 100% 37.8%;
+    --action-danger-active: 355.7 91.6% 32.5%;
+    --action-danger-fg: 0 0% 100%;
+    --action-disabled: 220 13% 91%;
+    --action-disabled-fg: 218.2 12.1% 64.3%;
+    /*
+      Текст выключенной кнопки без заливки (secondary, ghost). Светлее, чем
+      -fg: там текст лежит на серой плашке, здесь — на белом.
+    */
+    --action-disabled-fg-subtle: 218.2 13.6% 84.1%;
+
+    /* Иконки */
+    --icon-default: 220 10.2% 46.3%;
+    --icon-strong: 210 29% 24.3%;
+    --icon-secondary: 218.2 12.1% 64.3%;
+    --icon-disabled: 218.2 13.6% 84.1%;
+    --icon-brand: 207.5 100% 51.2%;
+    --icon-success: 142.4 100% 32.5%;
+    --icon-warning: 34.3 100% 32.5%; /* icon/warning #A65F00 */
+    --icon-danger: 357.1 100% 45.3%;
+
+    /* Акцентные оттенки для бейджей и карточек-категорий */
+    --hue-red: 357.1 100% 45.3%;
+    --hue-red-subtle: 0 85.7% 97.3%;
+    --hue-orange: 24.7 100% 50%;
+    --hue-orange-subtle: 34.9 100% 91.6%;
+    --hue-amber: 36.4 100% 49.8%;
+    --hue-amber-subtle: 48.2 96.6% 88.6%;
+    --hue-green: 142.4 100% 32.5%;
+    --hue-green-subtle: 140.6 84.2% 92.5%;
+    --hue-emerald: 159.9 100% 36.9%;
+    --hue-emerald-subtle: 150 80.8% 89.8%;
+    --hue-teal: 173.6 100% 36.7%;
+    --hue-teal-subtle: 167.5 85.7% 89%;
+    --hue-cyan: 189.6 100% 42.9%;
+    --hue-cyan-subtle: 185 96% 90.2%;
+    --hue-sky: 199.2 100% 47.8%;
+    --hue-sky-subtle: 203.2 93.9% 93.5%;
+    --hue-blue: 216.2 100% 58.4%;
+    --hue-blue-subtle: 206.7 100% 92.9%;
+    --hue-indigo: 240.8 100% 68.6%;
+    --hue-indigo-subtle: 226.5 100% 93.9%;
+    --hue-violet: 261 100% 65.9%;
+    --hue-violet-subtle: 251.4 91.3% 95.5%;
+    --hue-purple: 273.4 100% 63.7%;
+    --hue-purple-subtle: 268.7 100% 95.5%;
+    --hue-pink: 329.2 100% 45.1%;
+    --hue-pink-subtle: 325.7 77.8% 94.7%;
+    --hue-rose: 345.5 100% 56.3%;
+    --hue-rose-subtle: 355.6 100% 94.7%;
+
+    /* Радиус: базовый — radius/lg дизайн-системы */
+    --radius: 12px;
+  }
+
+  /*
+    Тёмная тема. Значения — тёмный режим ДС 2026: там, где нашлась переменная,
+    разрешённая на настоящем тёмном экране (Figma «ВЭД AI», node 2343:13060),
+    берём её; где переменной нет — подпись под образцом палитры; где ДС молчит
+    или сам себе противоречит, решение помечено словом «наше».
+
+    Режим включает класс .dark на <html> — его ставит скрипт в разметке до
+    первой отрисовки, чтобы страница не мигала светлой темой.
+  */
+  .dark {
+
+    /*
+      Бренд в тёмной теме читается наоборот: младшие ступени — глубокие
+      подложки, старшие — светлый текст. Так «чем больше номер, тем
+      заметнее» продолжает работать, а brand/500 остаётся брендом.
+    */
+    --brand-50: 211 56.4% 10.8%;
+    --brand-100: 210 57.9% 14.9%;
+    --brand-200: 209.5 58.1% 20.6%;
+    --brand-300: 209.7 60.5% 28.8%;
+    --brand-400: 208.4 62.7% 46.3%;
+    --brand-500: 207.5 100% 51.2%; /* brand/500 — не меняется */
+    --brand-600: 207.5 100% 62%; /* brand/400 ДС — брендовый тон тёмной темы */
+    --brand-700: 208 100% 73.1%;
+
+    /* Базовая семантика */
+    --background: 240 2.2% 8.8%; /* bg/Main */
+    --foreground: 0 0% 98%; /* text/primary */
+    --card: 0 0% 14.9%; /* bg/muted — на нём лежат карточки и кнопки */
+    /*
+      Поверхность между фоном страницы и карточкой: 22/22/23 → 30/30/32 →
+      38/38/38. ДС даёт bg/subtle #171717, но им закрашены и утопленные
+      строки внутри карточки, и приподнятые панели поверх страницы — на
+      #161617 такая панель исчезала. Ступень посередине работает в обе
+      стороны: на странице читается как приподнятая, на карточке — как
+      утопленная.
+    */
+    --surface: 240 3.4% 11.6%;
+    --card-foreground: 0 0% 98%;
+    --primary: 207.5 100% 62%; /* action/primary */
+    --primary-foreground: 0 0% 100%; /* action/primary-fg */
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%; /* bg/muted */
+    --muted-foreground: 218.2 12.1% 64.3%; /* text/quaternary */
+    --accent: 207.7 39.4% 12.9%; /* bg/brand-subtle: brand 10 % поверх фона */
+    --accent-foreground: 207.5 100% 62%;
+    --destructive: 358.8 100% 69.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 25.1%; /* border/default */
+    --input: 0 0% 25.1%;
+    --ring: 207.5 100% 62%; /* border/focus */
+
+    /* Текст */
+    --text-secondary: 218.2 12.1% 64.3%; /* text/secondary — в обоих режимах один */
+    --text-disabled: 220 10.2% 46.3%; /* наше: ДС даёт #D4D4D4, но этим токеном у нас набран самый тихий текст (время, подсказки), и он оказался бы ярче описаний */
+    --text-link: 207.5 100% 62%; /* text/link */
+    --text-link-hover: 207.6 100% 85.1%; /* text/link-hover */
+    --text-success: 143.9 100% 39.4%;
+    --text-warning: 43.5 100% 50%;
+    --text-danger: 358.8 100% 69.6%;
+
+    /* Подложки */
+    --bg-canvas: 0 0% 14.9%; /* bg/canvas */
+    --bg-brand-subtle: 207.7 39.4% 12.9%;
+    --bg-success: 144.9 100% 25.5%;
+    --bg-success-subtle: 145.1 87.8% 9.6%;
+    --bg-warning: 30.1 100% 44.1%;
+    --bg-warning-subtle: 20.9 97.2% 13.9%;
+    --bg-danger: 358.8 100% 69.6%;
+    --bg-danger-subtle: 359 79.5% 15.3%; /* ДС даёт его с прозрачностью 30 % */
+    --bg-badge: 215.6 15.4% 34.3%;
+    --bg-overlay: 0 0% 0%; /* bg/overlay — чёрный вместо синего */
+
+    /* Поля ввода */
+    --input-text: 220 13% 91%; /* наше: значения ДС для тёмного поля нет */
+    --input-helper: 218.2 12.1% 64.3%; /* наше */
+
+    /* Границы */
+    --border-strong: 220 10.2% 46.3%;
+    --border-field: 215.6 15.4% 34.3%; /* наше: рамка поля должна читаться на #262626 */
+    --border-focus: 207.5 100% 62%;
+    --border-success: 150 95.6% 44.7%;
+    --border-warning: 43.5 100% 50%;
+    --border-danger: 358.8 100% 69.6%;
+
+    /* Действия */
+    --action-primary: 207.5 100% 62%;
+    --action-primary-hover: 207.5 100% 51.2%; /* наше: ДС для тёмного режима оставил ступени светлой темы */
+    --action-primary-active: 207.3 100% 43.9%; /* наше */
+    --action-primary-fg: 0 0% 100%;
+    --action-secondary: 0 0% 14.9%;
+    --action-secondary-hover: 0 0% 25.1%;
+    --action-secondary-fg: 0 0% 100%;
+    --action-danger: 358.8 100% 69.6%;
+    --action-danger-hover: 357.1 100% 45.3%; /* наше: по подписи ДС наведение уходило в #82181A — с яркого красного в тёмно-бордовый */
+    --action-danger-active: 357.8 100% 37.8%; /* наше */
+    --action-danger-fg: 0 0% 100%;
+    --action-disabled: 0 0% 25.1%;
+    --action-disabled-fg: 220 10.2% 46.3%;
+    --action-disabled-fg-subtle: 215.6 15.4% 34.3%;
+
+    /* Значки */
+    --icon-default: 218.2 13.6% 84.1%;
+    --icon-strong: 210 20% 98%;
+    --icon-secondary: 218.2 12.1% 64.3%;
+    --icon-disabled: 215.6 15.4% 34.3%;
+    --icon-brand: 207.5 100% 62%;
+    --icon-success: 143.9 100% 39.4%;
+    --icon-warning: 38.9 100% 40.8%;
+    --icon-danger: 358.8 100% 69.6%;
+
+    /* Оттенки категорий */
+    --hue-red: 358.8 100% 69.6%;
+    --hue-red-subtle: 358.9 68.8% 30.2%;
+    --hue-orange: 31.8 100% 50.8%;
+    --hue-orange-subtle: 15.8 82.6% 27.1%;
+    --hue-amber: 43.5 100% 50%;
+    --hue-amber-subtle: 20.9 97.2% 13.9%;
+    --hue-green: 143.9 100% 39.4%;
+    --hue-green-subtle: 145.1 87.8% 9.6%;
+    --hue-emerald: 161.3 100% 41.6%;
+    --hue-emerald-subtle: 166.4 100% 8.6%;
+    --hue-teal: 173.5 100% 41.8%;
+    --hue-teal-subtle: 178.7 91.8% 9.6%;
+    --hue-cyan: 187.7 100% 47.5%;
+    --hue-cyan-subtle: 196.9 86.5% 14.5%;
+    --hue-sky: 195.8 100% 50%;
+    --hue-sky-subtle: 203.5 87.3% 15.5%;
+    --hue-blue: 212.1 100% 65.9%;
+    --hue-blue-subtle: 207.5 100% 23.9%;
+    --hue-indigo: 235.4 100% 74.3%;
+    --hue-indigo-subtle: 244.7 49.5% 20.2%;
+    --hue-violet: 256.6 100% 75.9%;
+    --hue-violet-subtle: 262.4 77.8% 22.9%;
+    --hue-purple: 272.5 100% 73.9%;
+    --hue-purple-subtle: 274.5 94.3% 20.6%;
+    --hue-pink: 327.4 95% 68.8%;
+    --hue-pink-subtle: 335.1 90.6% 16.7%;
+    --hue-rose: 349.6 100% 69.4%;
+    --hue-rose-subtle: 342.4 94.9% 15.5%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Кольцо фокуса дизайн-системы: 2px + отступ. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--border-focus));
+    outline-offset: 2px;
+  }
+}
+
+/*
+  Плитка показателя (KPI). Наведение подсвечивает рамку, значок и цифры
+  брендовым и приподнимает карточку лёгкой тенью — так плитка отзывается
+  одинаково во всех разделах, а не по-своему в каждом.
+
+  Цвет задан здесь, а не утилитами в разметке: подпись и значение внутри
+  уже покрашены классами text-muted-foreground и text-foreground, и
+  перебить их из родителя можно только правилом с большей специфичностью.
+*/
+.kpi-tile {
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.kpi-tile:hover {
+  border-color: hsl(var(--brand-500));
+  box-shadow: 0 4px 12px -4px hsl(var(--brand-500) / 0.25);
+}
+
+.kpi-tile:hover svg,
+.kpi-tile:hover span {
+  color: hsl(var(--brand-500));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kpi-tile {
+    transition: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.22s ease-out;
+}
+
+/* Появление ответа и карточек ассистента: сдвиг снизу с задержкой каскада.
+   Задержку задаёт вызывающий код через animation-delay. */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Точки «ассистент печатает» — волна по трём точкам. */
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.animate-typing {
+  animation: typing 1.1s ease-in-out infinite;
+}
+
+/* Мягкая пульсация подложки — пока ассистент собирает ответ. */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.12);
+  }
+}
+
+.animate-breathe {
+  animation: breathe 1.8s ease-in-out infinite;
+}
+
+/* Значок ассистента: искра медленно поворачивается внутри круга. Оборот за
+   четыре секунды — движение заметно, но не тянет на себя внимание. */
+@keyframes ai-spark-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ai-spark-spin {
+  transform-box: fill-box;
+  transform-origin: 50%;
+  animation: ai-spark-spin 4s linear infinite;
+}
+
+/* Ореол кнопки ассистента: медленно расходится и снова собирается. */
+@keyframes ai-fab-halo {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.18;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.06;
+  }
+}
+
+.ai-fab-halo {
+  animation: ai-fab-halo 3.2s ease-in-out infinite;
+}
+
+/* Точки ожидания в разговоре: подпрыгивают по очереди. */
+@keyframes dot-typing {
+  0%,
+  72%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  36% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.dot-typing {
+  animation: dot-typing 1.15s ease-in-out infinite;
+}
+
+/* Появление отчёта и панели разговора: мягкий подъём с расфокусом. */
+@keyframes enter-soft {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+.animate-enter-soft {
+  animation: enter-soft 0.45s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes report-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-report-in {
+  animation: report-in 0.36s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+/*
+  Панель разговора приезжает справа. Анимируем прозрачность и сдвиг, а не
+  ширину: на узком экране панель скрыта совсем, и анимация ширины оставляла
+  её схлопнутой после того, как экран становился широким.
+*/
+@keyframes panel-open {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+.animate-panel-open {
+  animation: panel-open 0.36s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-typing,
+  .animate-breathe,
+  .ai-spark-spin,
+  .ai-fab-halo,
+  .animate-enter-soft,
+  .animate-report-in,
+  .animate-panel-open {
+    animation: none;
+  }
+
+  .dot-typing {
+    animation: none;
+    opacity: 0.6;
+  }
+}

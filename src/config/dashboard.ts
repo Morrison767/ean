@@ -1,0 +1,34 @@
+import type { BadgeProps } from "@/components/ui/badge";
+import type { RiskTag } from "@/data/types";
+
+/**
+ * Подписи риск-тегов. Справочник из прежней сборки: там же, где цвет, должна
+ * лежать и подпись, иначе один и тот же тег в двух местах называется по-разному.
+ */
+export const RISK_TAG_LABEL: Record<RiskTag, string> = {
+  criminal: "Судимость",
+  tax_debt: "Налог. задолж.",
+  wanted: "В розыске",
+  sanctions: "Санкции",
+  bankrupt: "Банкротство",
+  pep: "PEP",
+  court: "Судебные дела",
+};
+
+/**
+ * Источники данных и давность синхронизации.
+ *
+ * Значения демонстрационные и в прототипе не пересчитываются: за ними стоял бы
+ * опрос интеграций, которого здесь нет. Тон подобран по давности — час и сутки
+ * не должны выглядеть одинаково.
+ */
+export const SOURCES: Array<{ name: string; ago: string; tone: BadgeProps["tone"] }> = [
+  { name: "ГБД ФЛ/ЮЛ", ago: "10 мин", tone: "success" },
+  { name: "Портал закупок", ago: "1 ч", tone: "success" },
+  { name: "Внешняя торговля", ago: "3 ч", tone: "success" },
+  { name: "Санкционные списки", ago: "6 ч", tone: "success" },
+  { name: "Судебный кабинет", ago: "12 ч", tone: "warning" },
+  { name: "Банк. транзакции (НБ)", ago: "1 д", tone: "warning" },
+  { name: "ЕНС (налог. задолж.)", ago: "2 ч", tone: "success" },
+  { name: "Telegram ID база", ago: "30 мин", tone: "success" },
+];

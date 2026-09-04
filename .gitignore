@@ -1,0 +1,21 @@
+/node_modules
+/.next
+/.next-serve
+/.next-staging
+/out
+/build
+
+# Сборка одностраничного демо: сам adata.html оставляем — его раздают
+# заказчику, а промежуточные бандлы и логи публикации в репозитории не нужны.
+/.publish-build/app.js
+/.publish-build/app.css
+/.publish-build/.refresh.log
+/.publish-build/.last-refresh
+.DS_Store
+*.pem
+npm-debug.log*
+.env*.local
+next-env.d.ts
+.vercel
+*.tsbuildinfo
+/.publish-build/.loop.log

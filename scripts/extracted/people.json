@@ -1,0 +1,1372 @@
+[
+  {
+    "id": "p1",
+    "iin": "000203302201",
+    "fullName": "Дүйсенбаев Понедельник Аманұлы",
+    "dob": "02.03.2000",
+    "gender": "Мужской",
+    "nationality": "Казах",
+    "citizenship": "🇰🇿 Казахстан",
+    "maritalStatus": "Женат",
+    "spouseId": "p6",
+    "spouseName": "Дүйсенбаева Вторник Серікқызы",
+    "phone": "+7 777 777 77 77",
+    "email": "ponedelnik@mail.kz",
+    "telegram": [
+      "@qwerty123",
+      "@qwer123"
+    ],
+    "riskLevel": "high",
+    "riskTags": [
+      "criminal",
+      "tax_debt"
+    ],
+    "score": 82,
+    "currentJob": {
+      "company": "ТОО \"Adata Ctd\"",
+      "bin": "0202003030401",
+      "position": "Ведущий специалист",
+      "start": "20.01.2020",
+      "type": "Трудовой договор",
+      "schedule": "Нормальная"
+    },
+    "jobs": [
+      {
+        "company": "JUZ40 Education",
+        "bin": "190140009001",
+        "position": "Аналитик",
+        "start": "20.01.2020",
+        "end": "01.06.2024",
+        "city": "Алматы, Казахстан"
+      },
+      {
+        "company": "EIDE Software Solutions",
+        "bin": "180440009002",
+        "position": "Разработчик",
+        "start": "20.01.2020",
+        "end": "01.06.2024",
+        "city": "Алматы, Казахстан"
+      },
+      {
+        "company": "Quantech",
+        "bin": "200340009003",
+        "position": "Data Engineer",
+        "start": "20.01.2020",
+        "end": "01.06.2024",
+        "city": "Алматы, Казахстан"
+      }
+    ],
+    "relatives": [
+      {
+        "relation": "Отец",
+        "fullName": "Омиртаев Аман Дүйсенұлы",
+        "iin": "630201200300",
+        "phone": "+7 700 999 99 99"
+      },
+      {
+        "relation": "Мать",
+        "fullName": "Омиртаева Есенгүл Ахметқызы",
+        "iin": "650201200300",
+        "phone": "+7 700 999 99 99"
+      },
+      {
+        "relation": "Супруга",
+        "fullName": "Дүйсенбаева Вторник Серікқызы",
+        "iin": "010505600723",
+        "phone": "+7 700 111 22 33"
+      },
+      {
+        "relation": "Сын",
+        "fullName": "Дүйсенбаев Алихан Понедельникұлы",
+        "iin": "210815600123",
+        "phone": "—"
+      },
+      {
+        "relation": "Дочь",
+        "fullName": "Дүйсенбаева Аяна Понедельникқызы",
+        "iin": "230412600456",
+        "phone": "—"
+      },
+      {
+        "relation": "Брат",
+        "fullName": "Дүйсенбаев Қанат Аманұлы",
+        "iin": "020301200400",
+        "phone": "+7 700 999 99 99",
+        "riskTags": [
+          "criminal"
+        ]
+      },
+      {
+        "relation": "Брат",
+        "fullName": "Дүйсенбаев Марат Аманұлы",
+        "iin": "050201200500",
+        "phone": "+7 700 999 99 99"
+      }
+    ],
+    "education": [
+      {
+        "institution": "Kazakh-American University",
+        "faculty": "Маркетинг и имиджевая политика",
+        "degree": "Высшее",
+        "start": "20.01.2020",
+        "end": "01.06.2024",
+        "city": "Алматы, Казахстан",
+        "bin": "0202003030401"
+      },
+      {
+        "institution": "Технический колледж Алматы",
+        "faculty": "Информационные технологии",
+        "degree": "Среднее специальное",
+        "start": "20.01.2020",
+        "end": "01.06.2024",
+        "city": "Алматы, Казахстан"
+      }
+    ],
+    "documents": [
+      {
+        "type": "Удостоверение личности",
+        "number": "02003000",
+        "issued": "20.01.2020",
+        "expires": "20.01.2030",
+        "authority": "МВД РК"
+      },
+      {
+        "type": "Паспорт",
+        "number": "N12345678",
+        "issued": "15.03.2018",
+        "expires": "15.03.2028",
+        "authority": "МВД РК"
+      }
+    ],
+    "flights": [
+      {
+        "date": "12.09.2026",
+        "route": "ALA → BCN",
+        "type": "international",
+        "fromCity": "Алматы",
+        "toCity": "Барселона, Испания",
+        "depTime": "14:05",
+        "arrTime": "18:25",
+        "arrDate": "13.09.2026",
+        "terminal": "ALA-1",
+        "gate": "32A",
+        "seatClass": "ECM",
+        "seat": "23A",
+        "airline": "Air Astana",
+        "flightNo": "KC-911",
+        "pnr": "X7QF2L",
+        "ticketNo": "465-2300114820",
+        "companions": [
+          {
+            "name": "Оспанов Дәурен Қайратұлы",
+            "iin": "780512300455",
+            "role": "Заместитель руководителя",
+            "organ": "Управление государственных закупок акимата г. Астана",
+            "risk": "high",
+            "seat": "23B"
+          },
+          {
+            "name": "Сапаров Бекзат Ерланұлы",
+            "relation": "Бизнес-партнёр",
+            "risk": "medium",
+            "seat": "31D"
+          }
+        ]
+      },
+      {
+        "date": "20.10.2025",
+        "route": "ALA → NUR",
+        "type": "domestic",
+        "fromCity": "Алматы",
+        "toCity": "Астана",
+        "depTime": "16:35",
+        "arrTime": "18:40",
+        "arrDate": "20.10.2025",
+        "terminal": "ALA-2",
+        "gate": "12B",
+        "seatClass": "ECO",
+        "seat": "8C",
+        "airline": "FlyArystan",
+        "flightNo": "KC-203",
+        "pnr": "M3PR9A",
+        "ticketNo": "465-2300098112",
+        "companions": [
+          {
+            "name": "Ескендіров Тимур Маратұлы",
+            "relation": "Коллега",
+            "risk": "none",
+            "seat": "22A"
+          }
+        ]
+      },
+      {
+        "date": "10.01.2025",
+        "route": "NUR → MSQ",
+        "type": "international",
+        "fromCity": "Астана",
+        "toCity": "Минск",
+        "depTime": "09:20",
+        "arrTime": "11:50",
+        "arrDate": "10.01.2025",
+        "terminal": "NUR-1",
+        "gate": "4A",
+        "seatClass": "BUS",
+        "seat": "2A",
+        "airline": "Belavia",
+        "flightNo": "B2-732",
+        "pnr": "KQ81VD",
+        "ticketNo": "628-4410052931"
+      }
+    ],
+    "railTickets": [
+      {
+        "departureDate": "03.08.2025 21:40",
+        "departureRu": "Алматы-2",
+        "arrivalRu": "Астана",
+        "coachNumber": "12",
+        "placeInCoach": "34 (нижнее)",
+        "train": "011Т «Тальго»",
+        "companions": [
+          {
+            "name": "Сапаров Бекзат Ерланұлы",
+            "relation": "Бизнес-партнёр",
+            "risk": "medium",
+            "coach": "12",
+            "place": "33 (нижнее)"
+          }
+        ]
+      },
+      {
+        "departureDate": "15.05.2025 07:15",
+        "departureRu": "Астана",
+        "arrivalRu": "Шымкент",
+        "coachNumber": "04",
+        "placeInCoach": "11 (нижнее)",
+        "train": "023Х"
+      }
+    ],
+    "connections": [
+      {
+        "name": "Ескендіров Тимур Маратұлы",
+        "relation": "Коллега",
+        "level": 2,
+        "risk": "none"
+      },
+      {
+        "name": "Нұрланова Айгерім Қайратқызы",
+        "relation": "Коллега",
+        "level": 2,
+        "risk": "none",
+        "organ": "Министерство финансов РК",
+        "role": "Главный специалист"
+      },
+      {
+        "name": "Оспанов Дәурен Қайратұлы",
+        "relation": "Деловой контакт",
+        "level": 2,
+        "iin": "780512300455",
+        "risk": "high",
+        "organ": "Управление государственных закупок акимата г. Астана",
+        "role": "Заместитель руководителя",
+        "riskReason": "Конфликт интересов в госзакупках"
+      },
+      {
+        "name": "Сапаров Бекзат Ерланұлы",
+        "relation": "Бизнес-партнёр",
+        "level": 2,
+        "risk": "medium",
+        "riskReason": "Совместные сделки с признаками риска"
+      },
+      {
+        "name": "Дүйсенбаев Ерлан Қанатұлы",
+        "relation": "Двоюродный брат",
+        "level": 3,
+        "risk": "none"
+      },
+      {
+        "name": "Әбдіров Санжар",
+        "relation": "Одноклассник",
+        "level": 3,
+        "risk": "none"
+      },
+      {
+        "name": "Қасымова Дана",
+        "relation": "Однокурсница",
+        "level": 3,
+        "risk": "none"
+      },
+      {
+        "name": "Тоқтаров Азамат",
+        "relation": "Сосед",
+        "level": 3,
+        "risk": "none"
+      }
+    ],
+    "assets": [
+      {
+        "type": "Недвижимость",
+        "description": "Квартира, г. Алматы, ул. Абая 150, кв. 12",
+        "registered": "15.03.2021"
+      },
+      {
+        "type": "Транспорт",
+        "description": "Toyota Camry 2020, рег. 777AAA01",
+        "registered": "01.06.2022"
+      }
+    ],
+    "govConnections": {
+      "level": "found",
+      "personal": "Отсутствует",
+      "relatives": "2 родственника на госслужбе",
+      "bodies": "Акимат, Министерство финансов",
+      "links": [
+        {
+          "name": "Омиртаева Есенгүл Ахметқызы",
+          "relation": "Мать",
+          "type": "relative",
+          "body": "Акимат г. Алматы",
+          "position": "Главный специалист отдела ЖКХ",
+          "period": "с 2015",
+          "iin": "650201200300",
+          "risk": "none"
+        },
+        {
+          "name": "Дүйсенбаев Марат Аманұлы",
+          "relation": "Брат",
+          "type": "relative",
+          "body": "Министерство финансов РК",
+          "position": "Эксперт управления",
+          "period": "2018 — 2023",
+          "iin": "050201200500",
+          "risk": "none"
+        },
+        {
+          "name": "Оспанов Дәурен Қайратұлы",
+          "relation": "Деловой контакт",
+          "type": "contact",
+          "body": "Управление государственных закупок акимата г. Астана",
+          "position": "Заместитель руководителя",
+          "iin": "780512300455",
+          "risk": "high"
+        },
+        {
+          "name": "Нұрланова Айгерім Қайратқызы",
+          "relation": "Коллега",
+          "type": "contact",
+          "body": "Министерство финансов РК",
+          "position": "Главный специалист",
+          "risk": "none"
+        }
+      ]
+    },
+    "addresses": [
+      {
+        "address": "г. Астана, р-н Есиль, ул. Туркестан, д. 23, кв. 81",
+        "type": "Регистрация",
+        "period": "с 12.06.2020"
+      },
+      {
+        "address": "г. Алматы, ул. Абая 150, кв. 12",
+        "type": "Проживание",
+        "period": "2015 — 2020"
+      }
+    ],
+    "trustFlags": [
+      "Налоговая задолженность",
+      "Участие в судебных делах",
+      "Проблемы в компаниях с тем же руководителем"
+    ],
+    "trustChecks": [
+      "ИП с тем же ФИО",
+      "Компания с тем же ФИО"
+    ],
+    "realEstate": [
+      {
+        "type": "Квартира",
+        "cadastral": "20:318:041:1234",
+        "address": "г. Алматы, ул. Абая 150, кв. 12",
+        "share": "1/1",
+        "registered": "15.03.2021",
+        "encumbrance": "Залог (ипотека) — АО \"Банк ЦентрКредит\"",
+        "encumbranceDate": "15.03.2021"
+      },
+      {
+        "type": "Земельный участок",
+        "cadastral": "20:301:012:0087",
+        "address": "Алматинская обл., с. Каменка, уч. 87",
+        "share": "1/2",
+        "registered": "02.09.2022"
+      }
+    ],
+    "vehicles": [
+      {
+        "model": "Toyota Camry",
+        "vin": "JTNB11HK0J3056781",
+        "plate": "777AAA01",
+        "year": "2020",
+        "techPassport": "BE12345678",
+        "encumbrance": "Арест — исполнительное производство № 1124-23 (взыскание налоговой задолженности)",
+        "encumbranceDate": "03.07.2023"
+      },
+      {
+        "model": "ZEEKR 001",
+        "vin": "L6T7944Z3PA012233",
+        "plate": "777ADA02",
+        "year": "2025",
+        "techPassport": "BE98765432"
+      }
+    ],
+    "businesses": [
+      {
+        "name": "ТОО \"EIDE Software Solutions\"",
+        "bin": "000203302201",
+        "role": "Руководитель · Учредитель",
+        "share": "45%",
+        "status": "Действующее",
+        "risk": "medium"
+      },
+      {
+        "name": "ТОО \"Adata Ctd\"",
+        "bin": "0202003030401",
+        "role": "Учредитель",
+        "share": "20%",
+        "status": "Действующее",
+        "risk": "none"
+      },
+      {
+        "name": "ИП Дүйсенбаев",
+        "bin": "000203302201",
+        "role": "Индивидуальный предприниматель",
+        "status": "Приостановлено",
+        "risk": "medium"
+      }
+    ],
+    "courtCases": [
+      {
+        "kind": "Гражданское",
+        "number": "7599-23-00-2/1234",
+        "role": "Ответчик",
+        "status": "На рассмотрении",
+        "date": "14.02.2024"
+      },
+      {
+        "kind": "Административное",
+        "number": "АП-2023-08812",
+        "role": "Привлекаемый",
+        "status": "Завершено",
+        "date": "03.07.2023"
+      }
+    ],
+    "fines": [
+      {
+        "reason": "Нарушение налогового законодательства (ст. 275 КоАП)",
+        "amount": 920000,
+        "date": "03.07.2023",
+        "paid": false
+      },
+      {
+        "reason": "Превышение скорости",
+        "amount": 26245,
+        "date": "11.01.2024",
+        "paid": true
+      }
+    ],
+    "income": [
+      {
+        "year": "2023",
+        "amount": 18400000,
+        "source": "ТОО \"EIDE Software Solutions\""
+      },
+      {
+        "year": "2022",
+        "amount": 14100000,
+        "source": "ТОО \"EIDE Software Solutions\""
+      },
+      {
+        "year": "2021",
+        "amount": 9700000,
+        "source": "JUZ40 Education"
+      }
+    ],
+    "birthPlace": "Казахстан, Алматы, Медеуский",
+    "lifeStatus": "Нормальный",
+    "regDate": "09 октября 2025",
+    "rka": "000 000 2001 000 02102302",
+    "experience": "4 года 5 месяцев",
+    "procurement": {
+      "role": "Поставщик",
+      "since": "12.06.2020",
+      "contracts": 14,
+      "totalAmount": 2340000000,
+      "winRate": 78,
+      "flags": [
+        "Повторные победы у одного заказчика",
+        "Узкий круг участников (2-3 поставщика)",
+        "Признаки аффилированности с заказчиком",
+        "Снижение цены менее 1%"
+      ],
+      "registries": [
+        {
+          "label": "Реестр недобросовестных поставщиков",
+          "status": "clear"
+        },
+        {
+          "label": "Недобросовестный участник Самрук-Қазына",
+          "status": "flag"
+        },
+        {
+          "label": "Топ-100 поставщиков РК",
+          "status": "check"
+        }
+      ],
+      "items": [
+        {
+          "customer": "ГУ «Управление цифровизации»",
+          "subject": "Разработка и внедрение ИС",
+          "amount": 890000000,
+          "date": "14.03.2024",
+          "status": "Исполнен",
+          "risk": "high"
+        },
+        {
+          "customer": "Акимат г. Астана",
+          "subject": "ИТ-сопровождение (3 года)",
+          "amount": 540000000,
+          "date": "02.11.2023",
+          "status": "Исполняется",
+          "risk": "medium"
+        },
+        {
+          "customer": "АО «Самрук-Қазына»",
+          "subject": "Поставка серверного оборудования",
+          "amount": 410000000,
+          "date": "20.06.2023",
+          "status": "Исполнен",
+          "risk": "medium"
+        },
+        {
+          "customer": "ГУ «Управление цифровизации»",
+          "subject": "Доработка ИС (без конкурса)",
+          "amount": 320000000,
+          "date": "18.01.2023",
+          "status": "Исполнен",
+          "risk": "high"
+        },
+        {
+          "customer": "КГУ «Центр обслуживания»",
+          "subject": "Лицензии на ПО",
+          "amount": 180000000,
+          "date": "05.09.2022",
+          "status": "Исполнен",
+          "risk": "none"
+        }
+      ]
+    },
+    "finance": {
+      "accounts": 3,
+      "banks": [
+        "АО «Банк ЦентрКредит»",
+        "АО «Kaspi Bank»"
+      ],
+      "totalIn": 3120000000,
+      "totalOut": 2980000000,
+      "period": "01.2023 — 12.2024",
+      "schemes": [
+        {
+          "type": "Транзитная схема",
+          "detail": "Средства проходят через 3 счёта за 48 часов без экономического обоснования",
+          "severity": "high"
+        },
+        {
+          "type": "Круговая схема",
+          "detail": "Возврат средств исходному отправителю через аффилированные ТОО",
+          "severity": "high"
+        },
+        {
+          "type": "Дробление платежей",
+          "detail": "Регулярные переводы ниже порога обязательного контроля (≈19 млн ₸)",
+          "severity": "medium"
+        }
+      ],
+      "transactions": [
+        {
+          "counterparty": "ТОО «Каспий Логистик»",
+          "direction": "in",
+          "amount": 320000000,
+          "date": "18.09.2024",
+          "flagged": true,
+          "note": "Поступление без договора"
+        },
+        {
+          "counterparty": "ИП Дүйсенбаев",
+          "direction": "out",
+          "amount": 180000000,
+          "date": "19.09.2024",
+          "flagged": true,
+          "note": "Транзит, 24 ч"
+        },
+        {
+          "counterparty": "ТОО «Алтын Трейд»",
+          "direction": "out",
+          "amount": 140000000,
+          "date": "20.09.2024",
+          "flagged": true,
+          "note": "Возврат отправителю"
+        },
+        {
+          "counterparty": "ГУ «Управление цифровизации»",
+          "direction": "in",
+          "amount": 445000000,
+          "date": "15.04.2024",
+          "flagged": false,
+          "note": "Оплата по контракту"
+        },
+        {
+          "counterparty": "ТОО «EIDE Software Solutions»",
+          "direction": "in",
+          "amount": 95000000,
+          "date": "05.08.2024",
+          "flagged": false
+        },
+        {
+          "counterparty": "Физ. лицо (картой)",
+          "direction": "out",
+          "amount": 18500000,
+          "date": "11.08.2024",
+          "flagged": true,
+          "note": "Дробление"
+        }
+      ]
+    }
+  },
+  {
+    "id": "p2",
+    "iin": "900512301122",
+    "fullName": "Рамазанов Жасулан Ерболович",
+    "dob": "12.05.1990",
+    "gender": "Мужской",
+    "nationality": "Казах",
+    "citizenship": "🇰🇿 Казахстан",
+    "maritalStatus": "Холост",
+    "phone": "+7 701 234 56 78",
+    "email": "ramazanov@gmail.com",
+    "telegram": [
+      "@ramazanov_j"
+    ],
+    "riskLevel": "none",
+    "riskTags": [
+      "none"
+    ],
+    "score": 12,
+    "currentJob": {
+      "company": "ТОО \"ИТ-Сервис\"",
+      "bin": "180440012345",
+      "position": "Программист",
+      "start": "01.03.2022",
+      "type": "Трудовой договор",
+      "schedule": "Нормальная"
+    },
+    "jobs": [],
+    "relatives": [],
+    "education": [],
+    "documents": [],
+    "flights": [],
+    "assets": [],
+    "govConnections": {
+      "level": "none",
+      "personal": "Отсутствует",
+      "relatives": "Нет данных",
+      "bodies": "—"
+    },
+    "addresses": [
+      {
+        "address": "г. Алматы, мкр. Самал-2, д. 58, кв. 14",
+        "type": "Регистрация",
+        "period": "с 03.2018"
+      }
+    ],
+    "trustFlags": [],
+    "trustChecks": [],
+    "realEstate": [],
+    "vehicles": [
+      {
+        "model": "Hyundai Tucson 2021",
+        "vin": "TMAJ281CALJ112233",
+        "plate": "101AB02",
+        "year": "2021"
+      }
+    ],
+    "businesses": [],
+    "courtCases": [],
+    "fines": [],
+    "income": [
+      {
+        "year": "2023",
+        "amount": 6200000,
+        "source": "ТОО \"ИТ-Сервис\""
+      },
+      {
+        "year": "2022",
+        "amount": 5400000,
+        "source": "ТОО \"ИТ-Сервис\""
+      }
+    ],
+    "birthPlace": "Казахстан, Алматы",
+    "lifeStatus": "Нормальный",
+    "regDate": "14 марта 2018",
+    "rka": "000 000 1180 000 04415521",
+    "experience": "4 года 3 месяца"
+  },
+  {
+    "id": "p3",
+    "iin": "850619401234",
+    "fullName": "Сейткали Нурлан Жаксыбекович",
+    "dob": "19.06.1985",
+    "gender": "Мужской",
+    "nationality": "Казах",
+    "citizenship": "🇰🇿 Казахстан",
+    "maritalStatus": "Разведен",
+    "phone": "+7 705 333 44 55",
+    "email": "seitkali@mail.ru",
+    "telegram": [
+      "@seitkali_nur",
+      "@nur_official"
+    ],
+    "riskLevel": "high",
+    "riskTags": [
+      "wanted",
+      "sanctions"
+    ],
+    "score": 97,
+    "jobs": [
+      {
+        "company": "АО \"МегаТрейд\"",
+        "bin": "090940005432",
+        "position": "Директор",
+        "start": "01.06.2015",
+        "end": "12.08.2022"
+      }
+    ],
+    "relatives": [],
+    "education": [],
+    "documents": [],
+    "flights": [
+      {
+        "date": "05.08.2022",
+        "route": "АЛА → ИСТ",
+        "type": "international"
+      },
+      {
+        "date": "01.08.2022",
+        "route": "НУР → АЛА",
+        "type": "domestic"
+      }
+    ],
+    "assets": [
+      {
+        "type": "Недвижимость",
+        "description": "Коттедж, Алматинская обл., пос. Каменка",
+        "registered": "10.11.2018"
+      }
+    ],
+    "govConnections": {
+      "level": "check",
+      "personal": "Требует проверки",
+      "relatives": "Нет данных",
+      "bodies": "—"
+    },
+    "addresses": [
+      {
+        "address": "г. Астана, ул. Кенесары 45, кв. 200",
+        "type": "Регистрация",
+        "period": "с 2009 (адрес не подтверждён)"
+      },
+      {
+        "address": "Алматинская обл., пос. Каменка",
+        "type": "Фактическое",
+        "period": "выбыл 08.2022"
+      }
+    ],
+    "trustFlags": [
+      "Уголовный розыск",
+      "Временное ограничение на выезд из РК",
+      "Арест на имущество",
+      "Арест на банковские счета",
+      "Арест на транспорт",
+      "Список лиц, причастных к финансированию терроризма",
+      "Участие в судебных делах",
+      "Запрет на регистрационные действия",
+      "Проблемы в компаниях с тем же руководителем",
+      "Наркологический учёт",
+      "Налоговая задолженность ИП",
+      "Наличие судимости",
+      "Осуждён за рубежом",
+      "Уволен по отрицательным мотивам"
+    ],
+    "trustChecks": [
+      "Участник процедуры банкротства граждан",
+      "Психоневрологический учёт",
+      "Дисциплинарные взыскания"
+    ],
+    "ipTaxDebt": {
+      "total": 6300000,
+      "principal": 5100000,
+      "peni": 780000,
+      "shtraf": 420000
+    },
+    "criminalRecord": {
+      "article": "ст. 218 УК РК (легализация денег, полученных преступным путём)",
+      "court": "СМЭС г. Астаны",
+      "punishment": "Лишение свободы на 5 лет (заочно)"
+    },
+    "foreignConviction": {
+      "country": "Российская Федерация",
+      "article": "ст. 174.1 УК РФ (легализация)",
+      "court": "Тверской районный суд г. Москвы",
+      "date": "12.04.2021",
+      "punishment": "Лишение свободы на 3 года условно"
+    },
+    "disciplinary": [
+      {
+        "workplace": "АО \"МегаТрейд\"",
+        "position": "Директор",
+        "qualification": "Нарушение финансовой дисциплины",
+        "penalty": "Выговор",
+        "date": "14.03.2021",
+        "issuedBy": "Совет директоров АО \"МегаТрейд\""
+      }
+    ],
+    "dismissal": {
+      "workplace": "АО \"МегаТрейд\"",
+      "position": "Директор",
+      "grounds": "Утрата доверия (пп. 13 п. 1 ст. 52 ТК РК)",
+      "orderNumber": "К-118/у",
+      "orderDate": "12.08.2022"
+    },
+    "realEstate": [
+      {
+        "type": "Жилой дом (коттедж)",
+        "cadastral": "03:215:118:0456",
+        "address": "Алматинская обл., пос. Каменка, ул. Лесная 4",
+        "share": "1/1",
+        "registered": "10.11.2018",
+        "encumbrance": "Арест (постановление суда)"
+      }
+    ],
+    "vehicles": [
+      {
+        "model": "Mercedes-Benz GLS 2021",
+        "vin": "WDC1671591A998877",
+        "plate": "888KZ02",
+        "year": "2021",
+        "encumbrance": "Арест · запрет на рег. действия"
+      },
+      {
+        "model": "Lexus LX 570 2019",
+        "vin": "JTJHY00W104223344",
+        "plate": "500NUR01",
+        "year": "2019",
+        "encumbrance": "Арест"
+      }
+    ],
+    "businesses": [
+      {
+        "name": "АО \"МегаТрейд\"",
+        "bin": "090940005432",
+        "role": "Руководитель (бывший)",
+        "share": "60%",
+        "status": "Банкротство",
+        "risk": "high"
+      },
+      {
+        "name": "ТОО \"Каспий Логистик\"",
+        "bin": "120340007788",
+        "role": "Учредитель",
+        "share": "100%",
+        "status": "Ликвидировано",
+        "risk": "high"
+      }
+    ],
+    "courtCases": [
+      {
+        "kind": "Уголовное",
+        "number": "УД-2022-44-118",
+        "role": "Обвиняемый",
+        "status": "Розыск",
+        "date": "15.08.2022",
+        "category": "criminal",
+        "court": "СМЭС г. Астаны",
+        "punishment": "Лишение свободы на 5 лет (заочно)"
+      },
+      {
+        "kind": "Гражданское (взыскание)",
+        "number": "7501-22-00-2/9912",
+        "role": "Ответчик",
+        "status": "Исполнительное производство",
+        "date": "02.09.2022",
+        "category": "civil",
+        "court": "Районный суд №2 г. Астаны"
+      },
+      {
+        "kind": "Административное (КоАП)",
+        "number": "А-2022-77-441",
+        "role": "Привлекаемое лицо",
+        "status": "Штраф наложен",
+        "date": "20.07.2022",
+        "category": "admin",
+        "court": "Адм. суд г. Астаны"
+      }
+    ],
+    "fines": [
+      {
+        "reason": "Неуплата налогов в крупном размере",
+        "amount": 14800000,
+        "date": "20.07.2022",
+        "paid": false
+      }
+    ],
+    "income": [
+      {
+        "year": "2021",
+        "amount": 92000000,
+        "source": "АО \"МегаТрейд\""
+      },
+      {
+        "year": "2020",
+        "amount": 78000000,
+        "source": "АО \"МегаТрейд\""
+      }
+    ],
+    "birthPlace": "Казахстан, Астана",
+    "lifeStatus": "Нормальный",
+    "regDate": "20 января 2009",
+    "rka": "000 000 0909 000 05432118",
+    "experience": "7 лет 2 месяца",
+    "procurement": {
+      "role": "Поставщик",
+      "since": "10.11.2009",
+      "contracts": 31,
+      "totalAmount": 18700000000,
+      "winRate": 91,
+      "flags": [
+        "Аномально высокий процент побед (91%)",
+        "Картельный сговор (3 связанных ТОО)",
+        "«Заточенные» технические задания",
+        "Контракты выше рыночных цен на 35%"
+      ],
+      "registries": [
+        {
+          "label": "Реестр недобросовестных поставщиков",
+          "status": "flag"
+        },
+        {
+          "label": "Недобросовестный участник Самрук-Қазына",
+          "status": "flag"
+        },
+        {
+          "label": "Реестр ненадёжных поставщиков НПП",
+          "status": "flag"
+        }
+      ],
+      "items": [
+        {
+          "customer": "АО «Национальная компания»",
+          "subject": "Поставка ГСМ",
+          "amount": 7200000000,
+          "date": "12.05.2021",
+          "status": "Расторгнут",
+          "risk": "high"
+        },
+        {
+          "customer": "Министерство (закрытый тендер)",
+          "subject": "Строительные работы",
+          "amount": 5400000000,
+          "date": "03.02.2021",
+          "status": "Исполнен",
+          "risk": "high"
+        },
+        {
+          "customer": "АО «Самрук-Қазына»",
+          "subject": "Логистические услуги",
+          "amount": 3100000000,
+          "date": "18.08.2020",
+          "status": "Спор в суде",
+          "risk": "high"
+        }
+      ]
+    },
+    "finance": {
+      "accounts": 5,
+      "banks": [
+        "АО «Jusan Bank»",
+        "Зарубежный банк (UAE)"
+      ],
+      "totalIn": 22400000000,
+      "totalOut": 22100000000,
+      "period": "01.2020 — 08.2022",
+      "schemes": [
+        {
+          "type": "Вывод средств за рубеж",
+          "detail": "Переводы на счета в ОАЭ через цепочку из 5 юрлиц",
+          "severity": "high"
+        },
+        {
+          "type": "Обналичивание",
+          "detail": "Снятие крупных сумм наличными через подставных лиц",
+          "severity": "high"
+        },
+        {
+          "type": "Круговая схема",
+          "detail": "Замкнутый оборот средств между аффилированными компаниями",
+          "severity": "high"
+        }
+      ],
+      "transactions": [
+        {
+          "counterparty": "Offshore Trading Ltd (ОАЭ)",
+          "direction": "out",
+          "amount": 4800000000,
+          "date": "01.08.2022",
+          "flagged": true,
+          "note": "Вывод за рубеж"
+        },
+        {
+          "counterparty": "АО «Национальная компания»",
+          "direction": "in",
+          "amount": 7200000000,
+          "date": "20.05.2021",
+          "flagged": false,
+          "note": "Оплата по контракту"
+        },
+        {
+          "counterparty": "ТОО «Каспий Логистик»",
+          "direction": "out",
+          "amount": 3300000000,
+          "date": "22.05.2021",
+          "flagged": true,
+          "note": "Транзит за 12 ч"
+        },
+        {
+          "counterparty": "Физ. лицо (наличные)",
+          "direction": "out",
+          "amount": 900000000,
+          "date": "15.06.2021",
+          "flagged": true,
+          "note": "Обналичивание"
+        }
+      ]
+    }
+  },
+  {
+    "id": "p4",
+    "iin": "780304200456",
+    "fullName": "Байжанов Ерлан Маратович",
+    "dob": "04.03.1978",
+    "gender": "Мужской",
+    "nationality": "Казах",
+    "citizenship": "🇰🇿 Казахстан",
+    "maritalStatus": "Женат",
+    "phone": "+7 747 888 11 22",
+    "email": "bayzhanov@inbox.ru",
+    "telegram": [
+      "@bayzhanov78"
+    ],
+    "riskLevel": "medium",
+    "riskTags": [
+      "tax_debt",
+      "court"
+    ],
+    "score": 55,
+    "currentJob": {
+      "company": "ИП Байжанов",
+      "bin": "841120301077",
+      "position": "Руководитель ИП",
+      "start": "15.07.2019",
+      "type": "ИП",
+      "schedule": "Свободный"
+    },
+    "jobs": [],
+    "relatives": [],
+    "education": [],
+    "documents": [],
+    "flights": [],
+    "assets": [],
+    "govConnections": {
+      "level": "none",
+      "personal": "Отсутствует",
+      "relatives": "Нет данных",
+      "bodies": "—"
+    },
+    "addresses": [
+      {
+        "address": "г. Шымкент, мкр. Нурсат, д. 12, кв. 5",
+        "type": "Регистрация",
+        "period": "с 2011"
+      }
+    ],
+    "trustFlags": [
+      "Налоговая задолженность",
+      "Участие в судебных делах",
+      "Должник по исполнительному производству"
+    ],
+    "trustChecks": [],
+    "realEstate": [
+      {
+        "type": "Квартира",
+        "cadastral": "19:301:055:0012",
+        "address": "г. Шымкент, мкр. Нурсат, д. 12, кв. 5",
+        "share": "1/1",
+        "registered": "14.05.2011"
+      }
+    ],
+    "vehicles": [],
+    "businesses": [
+      {
+        "name": "ИП Байжанов",
+        "bin": "841120301077",
+        "role": "Индивидуальный предприниматель",
+        "status": "Действующее",
+        "risk": "medium"
+      }
+    ],
+    "courtCases": [
+      {
+        "kind": "Гражданское (взыскание долга)",
+        "number": "7506-23-00-2/4471",
+        "role": "Ответчик",
+        "status": "Исполнительное производство",
+        "date": "18.10.2023"
+      }
+    ],
+    "fines": [
+      {
+        "reason": "Несвоевременная сдача налоговой отчётности",
+        "amount": 184000,
+        "date": "12.05.2023",
+        "paid": false
+      }
+    ],
+    "income": [
+      {
+        "year": "2023",
+        "amount": 7900000,
+        "source": "ИП Байжанов"
+      }
+    ],
+    "birthPlace": "Казахстан, Шымкент",
+    "lifeStatus": "Нормальный",
+    "regDate": "11 мая 2011",
+    "rka": "000 000 1178 000 03041552",
+    "experience": "4 года 11 месяцев"
+  },
+  {
+    "id": "p5",
+    "iin": "910805400238",
+    "fullName": "Рахимова Гульнара Серикбаевна",
+    "dob": "05.08.1991",
+    "gender": "Женский",
+    "nationality": "Казашка",
+    "citizenship": "🇰🇿 Казахстан",
+    "maritalStatus": "Замужем",
+    "phone": "+7 776 555 66 77",
+    "email": "rakhimova@gmail.com",
+    "telegram": [
+      "@gul_design"
+    ],
+    "riskLevel": "medium",
+    "riskTags": [
+      "court"
+    ],
+    "score": 28,
+    "currentJob": {
+      "company": "ИП Рахимова",
+      "bin": "910805400238",
+      "position": "Дизайнер",
+      "start": "10.04.2020",
+      "type": "ИП",
+      "schedule": "Свободный"
+    },
+    "jobs": [],
+    "relatives": [],
+    "education": [],
+    "documents": [],
+    "flights": [],
+    "assets": [],
+    "govConnections": {
+      "level": "none",
+      "personal": "Отсутствует",
+      "relatives": "Нет данных",
+      "bodies": "—"
+    },
+    "addresses": [
+      {
+        "address": "г. Алматы, ул. Розыбакиева 247, кв. 78",
+        "type": "Регистрация",
+        "period": "с 2016"
+      }
+    ],
+    "trustFlags": [
+      "Участие в судебных делах"
+    ],
+    "trustChecks": [],
+    "realEstate": [],
+    "vehicles": [
+      {
+        "model": "Kia K5 2022",
+        "vin": "KNAGM4AD5N5112299",
+        "plate": "247GS02",
+        "year": "2022"
+      }
+    ],
+    "businesses": [
+      {
+        "name": "ИП Рахимова",
+        "bin": "910805400238",
+        "role": "Индивидуальный предприниматель",
+        "status": "Действующее",
+        "risk": "none"
+      }
+    ],
+    "courtCases": [
+      {
+        "kind": "Гражданское (защита прав потребителя)",
+        "number": "7520-23-00-2/3301",
+        "role": "Истец",
+        "status": "Завершено",
+        "date": "07.04.2023"
+      }
+    ],
+    "fines": [],
+    "income": [
+      {
+        "year": "2023",
+        "amount": 5200000,
+        "source": "ИП Рахимова"
+      }
+    ],
+    "birthPlace": "Казахстан, Алматы",
+    "lifeStatus": "Нормальный",
+    "regDate": "02 февраля 2016",
+    "rka": "000 000 1605 000 04002388",
+    "experience": "4 года 2 месяца"
+  },
+  {
+    "id": "p6",
+    "iin": "010505600723",
+    "fullName": "Дүйсенбаева Вторник Серікқызы",
+    "dob": "05.05.2001",
+    "gender": "Женский",
+    "nationality": "Казашка",
+    "citizenship": "🇰🇿 Казахстан",
+    "maritalStatus": "Замужем",
+    "spouseId": "p1",
+    "spouseName": "Дүйсенбаев Понедельник Аманұлы",
+    "phone": "+7 700 111 22 33",
+    "email": "vtornik@mail.kz",
+    "telegram": [
+      "@vtornik_d"
+    ],
+    "riskLevel": "none",
+    "riskTags": [
+      "none"
+    ],
+    "score": 9,
+    "currentJob": {
+      "company": "ТОО \"EIDE Software Solutions\"",
+      "bin": "000203302201",
+      "position": "Маркетолог",
+      "start": "01.09.2022",
+      "type": "Трудовой договор",
+      "schedule": "Нормальная"
+    },
+    "jobs": [],
+    "relatives": [
+      {
+        "relation": "Супруг",
+        "fullName": "Дүйсенбаев Понедельник Аманұлы",
+        "iin": "000203302201",
+        "phone": "+7 777 777 77 77",
+        "riskTags": [
+          "criminal",
+          "tax_debt"
+        ]
+      },
+      {
+        "relation": "Сын",
+        "fullName": "Дүйсенбаев Алихан Понедельникұлы",
+        "iin": "210815600123",
+        "phone": "—"
+      },
+      {
+        "relation": "Дочь",
+        "fullName": "Дүйсенбаева Аяна Понедельникқызы",
+        "iin": "230412600456",
+        "phone": "—"
+      }
+    ],
+    "education": [
+      {
+        "institution": "Kazakh-American University",
+        "faculty": "Маркетинг и PR",
+        "degree": "Высшее",
+        "start": "01.09.2018",
+        "end": "20.06.2022",
+        "city": "Алматы, Казахстан",
+        "bin": "0202003030401"
+      }
+    ],
+    "documents": [
+      {
+        "type": "Удостоверение личности",
+        "number": "01505000",
+        "issued": "05.05.2017",
+        "expires": "05.05.2027",
+        "authority": "МВД РК"
+      }
+    ],
+    "flights": [],
+    "assets": [],
+    "govConnections": {
+      "level": "check",
+      "personal": "Отсутствует",
+      "relatives": "Супруг — выявлены связи с госорганами",
+      "bodies": "—"
+    },
+    "addresses": [
+      {
+        "address": "г. Астана, р-н Есиль, ул. Туркестан, д. 23, кв. 81",
+        "type": "Регистрация",
+        "period": "с 2022"
+      }
+    ],
+    "trustFlags": [],
+    "trustChecks": [
+      "Компания с тем же ФИО"
+    ],
+    "realEstate": [],
+    "vehicles": [
+      {
+        "model": "Toyota RAV4",
+        "vin": "JTMBFREV6JD223344",
+        "plate": "300VD02",
+        "year": "2022",
+        "techPassport": "BE45612300"
+      }
+    ],
+    "businesses": [],
+    "courtCases": [],
+    "fines": [],
+    "income": [
+      {
+        "year": "2023",
+        "amount": 8200000,
+        "source": "ТОО \"EIDE Software Solutions\""
+      }
+    ],
+    "birthPlace": "Казахстан, Алматы",
+    "lifeStatus": "Нормальный",
+    "regDate": "12 июня 2022",
+    "rka": "000 000 2206 000 01505723",
+    "experience": "1 год 8 месяцев"
+  }
+]

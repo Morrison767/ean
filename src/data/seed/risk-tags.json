@@ -1,0 +1,38 @@
+{
+  "none": null,
+  "criminal": {
+    "label": "Был судим",
+    "bg": "bg-orange-500/15",
+    "text": "text-orange-400"
+  },
+  "tax_debt": {
+    "label": "Налоговая задолженность",
+    "bg": "bg-yellow-500/15",
+    "text": "text-yellow-400"
+  },
+  "wanted": {
+    "label": "В розыске",
+    "bg": "bg-red-500/20",
+    "text": "text-red-400"
+  },
+  "sanctions": {
+    "label": "В санкционном списке",
+    "bg": "bg-red-500/20",
+    "text": "text-red-400"
+  },
+  "bankrupt": {
+    "label": "Банкротство",
+    "bg": "bg-purple-500/15",
+    "text": "text-purple-400"
+  },
+  "pep": {
+    "label": "ПЭП",
+    "bg": "bg-indigo-500/15",
+    "text": "text-indigo-400"
+  },
+  "court": {
+    "label": "Судебное дело",
+    "bg": "bg-slate-500/20",
+    "text": "text-[var(--ea-text-3)]"
+  }
+}

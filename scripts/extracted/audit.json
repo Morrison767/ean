@@ -1,0 +1,152 @@
+[
+  {
+    "id": "1",
+    "ts": "10.06.2026 14:52:11",
+    "user": "Асыл Рахманов",
+    "action": "search",
+    "subject": "Байжанов Ерлан",
+    "subjectType": "person",
+    "ip": "10.0.1.12",
+    "status": "success"
+  },
+  {
+    "id": "2",
+    "ts": "10.06.2026 14:51:03",
+    "user": "Асыл Рахманов",
+    "action": "view_profile",
+    "subject": "Байжанов Ерлан Маратович",
+    "subjectType": "person",
+    "ip": "10.0.1.12",
+    "status": "success"
+  },
+  {
+    "id": "3",
+    "ts": "10.06.2026 14:50:44",
+    "user": "Асыл Рахманов",
+    "action": "ai_analysis",
+    "subject": "Байжанов Ерлан Маратович",
+    "subjectType": "person",
+    "ip": "10.0.1.12",
+    "status": "success"
+  },
+  {
+    "id": "4",
+    "ts": "10.06.2026 13:28:17",
+    "user": "Динара Сейткали",
+    "action": "search",
+    "subject": "ТОО EIDE Software",
+    "subjectType": "company",
+    "ip": "10.0.1.34",
+    "status": "success"
+  },
+  {
+    "id": "5",
+    "ts": "10.06.2026 13:27:55",
+    "user": "Динара Сейткали",
+    "action": "view_profile",
+    "subject": "ТОО EIDE Software Solutions",
+    "subjectType": "company",
+    "ip": "10.0.1.34",
+    "status": "success"
+  },
+  {
+    "id": "6",
+    "ts": "10.06.2026 13:26:30",
+    "user": "Динара Сейткали",
+    "action": "export",
+    "subject": "ТОО EIDE Software Solutions",
+    "subjectType": "company",
+    "ip": "10.0.1.34",
+    "status": "success"
+  },
+  {
+    "id": "7",
+    "ts": "10.06.2026 11:14:09",
+    "user": "Марат Жаксыбеков",
+    "action": "search",
+    "subject": "Сейткали Нурлан",
+    "subjectType": "person",
+    "ip": "10.0.2.07",
+    "status": "success"
+  },
+  {
+    "id": "8",
+    "ts": "10.06.2026 11:13:52",
+    "user": "Марат Жаксыбеков",
+    "action": "check",
+    "subject": "Сейткали Нурлан",
+    "subjectType": "person",
+    "ip": "10.0.2.07",
+    "status": "success"
+  },
+  {
+    "id": "9",
+    "ts": "10.06.2026 10:02:33",
+    "user": "Асыл Рахманов",
+    "action": "search",
+    "subject": "АО МегаТрейд",
+    "subjectType": "company",
+    "ip": "10.0.1.12",
+    "status": "success"
+  },
+  {
+    "id": "10",
+    "ts": "10.06.2026 09:58:01",
+    "user": "Асыл Рахманов",
+    "action": "export",
+    "subject": "Карабаев Саламат",
+    "subjectType": "person",
+    "ip": "10.0.1.12",
+    "status": "denied"
+  },
+  {
+    "id": "11",
+    "ts": "09.06.2026 17:41:22",
+    "user": "Гульнара Омарова",
+    "action": "search",
+    "subject": "Тоқтаров Азамат",
+    "subjectType": "person",
+    "ip": "10.0.3.19",
+    "status": "success"
+  },
+  {
+    "id": "12",
+    "ts": "09.06.2026 17:40:58",
+    "user": "Гульнара Омарова",
+    "action": "view_profile",
+    "subject": "Тоқтаров Азамат",
+    "subjectType": "person",
+    "ip": "10.0.3.19",
+    "status": "success"
+  },
+  {
+    "id": "13",
+    "ts": "09.06.2026 16:15:44",
+    "user": "Динара Сейткали",
+    "action": "ai_analysis",
+    "subject": "Еркадилов Әділмамбет",
+    "subjectType": "person",
+    "ip": "10.0.1.34",
+    "status": "success"
+  },
+  {
+    "id": "14",
+    "ts": "09.06.2026 15:33:10",
+    "user": "Марат Жаксыбеков",
+    "action": "search",
+    "subject": "Рамазанов Жасулан",
+    "subjectType": "person",
+    "ip": "10.0.2.07",
+    "status": "error"
+  },
+  {
+    "id": "15",
+    "ts": "09.06.2026 14:07:28",
+    "user": "Асыл Рахманов",
+    "action": "check",
+    "subject": "ТОО Нуркад",
+    "subjectType": "company",
+    "ip": "10.0.1.12",
+    "status": "success"
+  }
+]

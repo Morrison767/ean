@@ -1,0 +1,221 @@
+[
+  {
+    "id": "t1",
+    "stmtId": "ST-001",
+    "date": "15.04.2024",
+    "counterparty": "ГУ «Управление цифровизации»",
+    "counterpartyBin": "700100200300",
+    "account": "KZ...0300",
+    "assignment": "Оплата по контракту ГЗ",
+    "amount": 445000000,
+    "direction": "in",
+    "type": "Поступление",
+    "risk": "none",
+    "flags": [],
+    "esf": true
+  },
+  {
+    "id": "t2",
+    "stmtId": "ST-001",
+    "date": "18.09.2024",
+    "counterparty": "ТОО «Каспий Логистик»",
+    "counterpartyBin": "120340007788",
+    "account": "KZ...7788",
+    "assignment": "Без договора",
+    "amount": 320000000,
+    "direction": "in",
+    "type": "Поступление",
+    "risk": "high",
+    "flags": [
+      "Поступление без договора",
+      "Связь с рисковым контрагентом"
+    ]
+  },
+  {
+    "id": "t3",
+    "stmtId": "ST-001",
+    "date": "19.09.2024",
+    "counterparty": "ИП Дүйсенбаев",
+    "counterpartyBin": "000203302201",
+    "account": "KZ...2201",
+    "assignment": "Перевод по договору займа",
+    "amount": 180000000,
+    "direction": "out",
+    "type": "Перевод",
+    "risk": "high",
+    "flags": [
+      "Транзит (24 ч)",
+      "Аффилированный получатель"
+    ]
+  },
+  {
+    "id": "t4",
+    "stmtId": "ST-001",
+    "date": "20.09.2024",
+    "counterparty": "ТОО «Алтын Трейд»",
+    "counterpartyBin": "210340550901",
+    "account": "KZ...0901",
+    "assignment": "Возврат средств",
+    "amount": 140000000,
+    "direction": "out",
+    "type": "Перевод",
+    "risk": "high",
+    "flags": [
+      "Круговая схема",
+      "Возврат отправителю"
+    ]
+  },
+  {
+    "id": "t5",
+    "stmtId": "ST-001",
+    "date": "11.08.2024",
+    "counterparty": "Физ. лицо (карта)",
+    "counterpartyBin": "—",
+    "account": "KZ...4412",
+    "assignment": "Прочие выплаты",
+    "amount": 18500000,
+    "direction": "out",
+    "type": "Снятие/перевод",
+    "risk": "medium",
+    "flags": [
+      "Дробление платежей"
+    ]
+  },
+  {
+    "id": "t6",
+    "stmtId": "ST-001",
+    "date": "05.08.2024",
+    "counterparty": "ТОО «EIDE Labs»",
+    "counterpartyBin": "210340778800",
+    "account": "KZ...8800",
+    "assignment": "Финансирование дочерней компании",
+    "amount": 95000000,
+    "direction": "out",
+    "type": "Перевод",
+    "risk": "none",
+    "flags": []
+  },
+  {
+    "id": "t7",
+    "stmtId": "ST-002",
+    "date": "01.08.2022",
+    "counterparty": "Offshore Trading Ltd (ОАЭ)",
+    "counterpartyBin": "—",
+    "account": "AE...9911",
+    "assignment": "Оплата услуг (нерезидент)",
+    "amount": 4800000000,
+    "direction": "out",
+    "type": "Межд. перевод",
+    "risk": "high",
+    "flags": [
+      "Вывод средств за рубеж",
+      "Нерезидент (офшор)"
+    ],
+    "ie": true
+  },
+  {
+    "id": "t8",
+    "stmtId": "ST-002",
+    "date": "20.05.2021",
+    "counterparty": "АО «Национальная компания»",
+    "counterpartyBin": "700100200300",
+    "account": "KZ...0300",
+    "assignment": "Оплата ГСМ по контракту",
+    "amount": 7200000000,
+    "direction": "in",
+    "type": "Поступление",
+    "risk": "none",
+    "flags": [],
+    "esf": true
+  },
+  {
+    "id": "t9",
+    "stmtId": "ST-002",
+    "date": "22.05.2021",
+    "counterparty": "ТОО «Каспий Логистик»",
+    "counterpartyBin": "120340007788",
+    "account": "KZ...7788",
+    "assignment": "Транспортные услуги",
+    "amount": 3300000000,
+    "direction": "out",
+    "type": "Перевод",
+    "risk": "high",
+    "flags": [
+      "Транзит (12 ч)",
+      "Завышенная стоимость"
+    ]
+  },
+  {
+    "id": "t10",
+    "stmtId": "ST-002",
+    "date": "15.06.2021",
+    "counterparty": "Физ. лицо (наличные)",
+    "counterpartyBin": "—",
+    "account": "—",
+    "assignment": "Выдача наличных",
+    "amount": 900000000,
+    "direction": "out",
+    "type": "Обналичивание",
+    "risk": "high",
+    "flags": [
+      "Обналичивание",
+      "Подставные лица"
+    ]
+  },
+  {
+    "id": "t11",
+    "stmtId": "ST-002",
+    "date": "10.07.2021",
+    "counterparty": "КГД МФ РК",
+    "counterpartyBin": "—",
+    "account": "KZ...0001",
+    "assignment": "Уплата налогов",
+    "amount": 120000000,
+    "direction": "out",
+    "type": "Платёж",
+    "risk": "none",
+    "flags": []
+  },
+  {
+    "id": "t12",
+    "stmtId": "ST-004",
+    "date": "12.03.2023",
+    "counterparty": "ТОО «Облачные решения»",
+    "counterpartyBin": "200140330011",
+    "account": "KZ...0011",
+    "assignment": "Оплата за хостинг",
+    "amount": 8400000000,
+    "direction": "in",
+    "type": "Поступление",
+    "risk": "none",
+    "flags": []
+  },
+  {
+    "id": "t13",
+    "stmtId": "ST-004",
+    "date": "20.06.2023",
+    "counterparty": "АО «Halyk Bank»",
+    "counterpartyBin": "—",
+    "account": "KZ...5577",
+    "assignment": "Погашение кредита",
+    "amount": 5000000000,
+    "direction": "out",
+    "type": "Платёж",
+    "risk": "none",
+    "flags": []
+  },
+  {
+    "id": "t14",
+    "stmtId": "ST-004",
+    "date": "18.11.2023",
+    "counterparty": "ТОО «ИТ-Сервис»",
+    "counterpartyBin": "180440012399",
+    "account": "KZ...2399",
+    "assignment": "Субподряд",
+    "amount": 3200000000,
+    "direction": "out",
+    "type": "Перевод",
+    "risk": "none",
+    "flags": []
+  }
+]
