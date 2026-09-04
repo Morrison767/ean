@@ -8,8 +8,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
+      # Только ветка по умолчанию: окружение github-pages принимает деплой
+      # лишь с неё, и сборка с любой другой ветки всё равно была бы отклонена
+      # на шаге публикации.
       - main
-      - rebuild/next-adata-ds
   # Позволяет запустить публикацию руками из вкладки Actions.
   workflow_dispatch:
 
