@@ -19,6 +19,12 @@ const nextConfig = {
   ...(isPages && {
     output: "export",
     basePath: repo,
+    /*
+      Своя рабочая папка для публикации. Иначе `next build` пишет в тот же
+      .next, за которым следит запущенный `next dev`, — сборка ломает кеш
+      разработки, и dev-сервер начинает падать с MODULE_NOT_FOUND.
+    */
+    distDir: ".next-pages",
     /* Каждый маршрут становится каталогом с index.html: так Pages отдаёт
        страницу и по адресу со слэшем, и без него. */
     trailingSlash: true,
