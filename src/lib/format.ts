@@ -17,22 +17,23 @@ export function num(value: number): string {
     .replace(/\B(?=(\d{3})+(?!\d))/g, NBSP);
 }
 
-/** Короткая сумма: «18 млрд ₸», «890 млн ₸», «26 тыс ₸». */
+/**
+ * Короткая сумма: «18 млрд ₸», «236 млн ₸», «1,2 трлн ₸».
+ *
+ * Округление повторяет прежнюю версию: триллионы с одним знаком, миллиарды и
+ * миллионы — целыми, меньше миллиона — полным числом с разделителями. Дробная
+ * часть у миллионов выглядит точностью, которой в этих данных нет, и разводит
+ * показатель с тем же числом в таблице ниже.
+ */
 export function money(value: number, currency = "₸"): string {
   const abs = Math.abs(value);
   const sign = value < 0 ? "−" : "";
-  const fmt = (v: number, unit: string) => {
-    /* Один знак после запятой только когда он что-то добавляет: «1,5 млрд»
-       информативнее «2 млрд», а «18,0 млрд» — нет. */
-    const rounded = Math.round(v * 10) / 10;
-    const body = Number.isInteger(rounded)
-      ? String(rounded)
-      : rounded.toFixed(1).replace(".", ",");
-    return `${sign}${body}${NBSP}${unit}${NBSP}${currency}`;
-  };
-  if (abs >= 1e9) return fmt(abs / 1e9, "млрд");
-  if (abs >= 1e6) return fmt(abs / 1e6, "млн");
-  if (abs >= 1e4) return fmt(abs / 1e3, "тыс");
+  const unit = (v: number, digits: number, name: string) =>
+    `${sign}${v.toFixed(digits).replace(".", ",")}${NBSP}${name}${NBSP}${currency}`;
+
+  if (abs >= 1e12) return unit(abs / 1e12, 1, "трлн");
+  if (abs >= 1e9) return unit(abs / 1e9, 0, "млрд");
+  if (abs >= 1e6) return unit(abs / 1e6, 0, "млн");
   return `${sign}${num(abs)}${NBSP}${currency}`;
 }
 

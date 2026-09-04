@@ -20,3 +20,4 @@ next-env.d.ts
 *.tsbuildinfo
 /.publish-build/.loop.log
 /.next-pages
+/.reference
