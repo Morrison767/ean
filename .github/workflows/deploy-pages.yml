@@ -1,0 +1,70 @@
+# Публикация прототипа на GitHub Pages.
+#
+# Сайт статический: Next собирается с output: "export" (включает переменная
+# GITHUB_PAGES) и раздаётся из каталога out. basePath берётся из имени
+# репозитория, поэтому workflow переносится в другой репозиторий без правок.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - rebuild/next-adata-ds
+  # Позволяет запустить публикацию руками из вкладки Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Параллельные публикации не нужны: важен последний коммит. Идущую сборку не
+# отменяем — прерванный deploy оставляет Pages в половинчатом состоянии.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Установка зависимостей
+        run: npm ci
+
+      - name: Настройка Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          # Включает Pages в настройках репозитория, если они ещё не включены.
+          enablement: true
+
+      - name: Проверка типов
+        run: npm run typecheck
+
+      - name: Сборка
+        env:
+          GITHUB_PAGES: "true"
+          # Сайт живёт в подкаталоге с именем репозитория.
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
