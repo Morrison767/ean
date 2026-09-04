@@ -30,7 +30,7 @@ export function KpiTile({
 }) {
   const tones = {
     brand: "bg-accent text-primary",
-    danger: "bg-danger-subtle text-danger-foreground",
+    danger: "bg-danger-subtle text-danger",
     success: "bg-success-subtle text-success-foreground",
     warning: "bg-warning-subtle text-warning-foreground",
   } as const;

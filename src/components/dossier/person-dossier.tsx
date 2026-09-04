@@ -38,6 +38,7 @@ import {
 import { Screen } from "@/components/app/screen";
 import { Checklist } from "@/components/dossier/checklist";
 import { DataList, Field } from "@/components/dossier/data-list";
+import { DocumentsTabs } from "@/components/dossier/documents-tabs";
 import { ScoreMeter } from "@/components/dossier/score-meter";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -235,30 +236,7 @@ function PersonalTab({ person }: { person: Person }) {
 
       {person.documents && person.documents.length > 0 && (
         <SectionCard icon={ShieldCheck} title="Документы" collapsible={false}>
-          <TableWrap>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Тип</TableHead>
-                  <TableHead>Номер</TableHead>
-                  <TableHead>Выдан</TableHead>
-                  <TableHead>Действителен до</TableHead>
-                  <TableHead>Орган</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {person.documents.map((d, i) => (
-                  <TableRow key={i}>
-                    <TableCell>{d.type}</TableCell>
-                    <TableCell className="tabular-nums">{d.number}</TableCell>
-                    <TableCell className="tabular-nums">{d.issued}</TableCell>
-                    <TableCell className="tabular-nums">{d.expires}</TableCell>
-                    <TableCell className="text-muted-foreground">{d.authority}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableWrap>
+          <DocumentsTabs documents={person.documents} />
         </SectionCard>
       )}
 

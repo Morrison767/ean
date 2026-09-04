@@ -16,8 +16,11 @@ import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
+  BadgeCheck,
   Building2,
   Download,
+  Gavel,
+  Home,
   FileSpreadsheet,
   Globe,
   Landmark,
@@ -27,6 +30,7 @@ import {
   ShieldCheck,
   ShoppingCart,
   Sparkles,
+  UserCog,
   Users,
   Wallet,
 } from "lucide-react";
@@ -60,12 +64,16 @@ import type { ChecklistSection, Company, RiskLevel } from "@/data/types";
 
 const TABS = [
   { id: "trust", label: "Благонадёжность", icon: ShieldCheck },
-  { id: "general", label: "Общие сведения", icon: Building2 },
-  { id: "owners", label: "Учредители", icon: Users },
+  { id: "basic", label: "Основные данные", icon: Building2 },
+  { id: "licenses", label: "Лицензии", icon: BadgeCheck },
+  { id: "leadership", label: "Руководство", icon: UserCog },
   { id: "finance", label: "Финансы и налоги", icon: Landmark },
-  { id: "ved", label: "ВЭД", icon: Globe },
-  { id: "procurement", label: "Госзакупки", icon: ShoppingCart },
   { id: "esf", label: "ЭСФ", icon: FileSpreadsheet },
+  { id: "ved", label: "ВЭД", icon: Globe },
+  { id: "property", label: "Имущество", icon: Home },
+  { id: "legal", label: "Суды и проверки", icon: Gavel },
+  { id: "structure", label: "Структура", icon: Network },
+  { id: "procurement", label: "Госзакупки", icon: ShoppingCart },
 ];
 
 const asRisk = (v: unknown): RiskLevel =>
@@ -186,14 +194,22 @@ export function CompanyDossier({
               className="flex flex-col gap-4"
             >
               {tab === "trust" && (
-                <Checklist sections={checklist} flags={[]} checks={company.riskTags?.map((t) => RISK_TAG_LABEL[t] ?? t) ?? []} />
+                <Checklist
+                  sections={checklist}
+                  flags={company.reliabilityFlags ?? []}
+                  checks={company.reliabilityChecks ?? []}
+                />
               )}
-              {tab === "general" && <GeneralTab company={company} />}
-              {tab === "owners" && <OwnersTab company={company} />}
+              {tab === "basic" && <GeneralTab company={company} />}
+              {tab === "licenses" && <LicensesTab company={company} />}
+              {tab === "leadership" && <LeadershipTab company={company} />}
               {tab === "finance" && <FinanceTab company={company} />}
-              {tab === "ved" && <VedTab company={company} declarations={related.declarations} />}
-              {tab === "procurement" && <ProcurementTab items={related.procurements} bin={company.bin} />}
               {tab === "esf" && <EsfTab items={related.invoices} bin={company.bin} />}
+              {tab === "ved" && <VedTab company={company} declarations={related.declarations} />}
+              {tab === "property" && <PropertyTab company={company} />}
+              {tab === "legal" && <LegalTab company={company} />}
+              {tab === "structure" && <StructureTab company={company} />}
+              {tab === "procurement" && <ProcurementTab items={related.procurements} bin={company.bin} />}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -219,39 +235,6 @@ function GeneralTab({ company }: { company: Company }) {
           )}
         </DataList>
       </SectionCard>
-
-      {company.licenses && company.licenses.length > 0 && (
-        <SectionCard icon={ShieldCheck} title="Лицензии" collapsible={false}>
-          <TableWrap>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Наименование</TableHead>
-                  <TableHead>Номер</TableHead>
-                  <TableHead>Выдана</TableHead>
-                  <TableHead>Орган</TableHead>
-                  <TableHead>Статус</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {company.licenses.map((l, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="font-medium">{l.name}</TableCell>
-                    <TableCell className="tabular-nums">{l.number}</TableCell>
-                    <TableCell className="tabular-nums">{l.issued}</TableCell>
-                    <TableCell className="text-muted-foreground">{l.authority}</TableCell>
-                    <TableCell>
-                      <Badge tone="success" size="sm">
-                        {l.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableWrap>
-        </SectionCard>
-      )}
 
       {company.bankDetails && company.bankDetails.length > 0 && (
         <SectionCard icon={Landmark} title="Банковские реквизиты" collapsible={false}>
@@ -283,15 +266,59 @@ function GeneralTab({ company }: { company: Company }) {
   );
 }
 
-/* -------------------------- Учредители и руководство -------------------------- */
+/* --------------------------------- Лицензии --------------------------------- */
 
-function OwnersTab({ company }: { company: Company }) {
-  const founders = company.foundersDetailed ?? company.founders ?? [];
+function LicensesTab({ company }: { company: Company }) {
+  if (!company.licenses?.length) {
+    return (
+      <EmptyState
+        icon={BadgeCheck}
+        title="Лицензий не найдено"
+        description="У организации нет разрешительных документов."
+      />
+    );
+  }
+  return (
+    <Stagger>
+      <SectionCard icon={BadgeCheck} title="Лицензии и разрешения" collapsible={false}>
+        <TableWrap>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Наименование</TableHead>
+                <TableHead>Номер</TableHead>
+                <TableHead>Выдана</TableHead>
+                <TableHead>Орган</TableHead>
+                <TableHead>Статус</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {company.licenses.map((l, i) => (
+                <TableRow key={i}>
+                  <TableCell className="font-medium">{l.name}</TableCell>
+                  <TableCell className="tabular-nums">{l.number}</TableCell>
+                  <TableCell className="tabular-nums">{l.issued}</TableCell>
+                  <TableCell className="text-muted-foreground">{l.authority}</TableCell>
+                  <TableCell>
+                    <Badge tone="success" size="sm">{l.status}</Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableWrap>
+      </SectionCard>
+    </Stagger>
+  );
+}
 
+/* -------------------------------- Руководство -------------------------------- */
+
+function LeadershipTab({ company }: { company: Company }) {
   return (
     <Stagger>
       {company.manager && (
-        <SectionCard icon={Users} title="Руководитель" collapsible={false}>
+        <SectionCard icon={UserCog} title="Действующий руководитель" collapsible={false}>
           <DataList cols={3} className="p-4 sm:p-5">
             <Field label="ФИО" value={company.manager.name} />
             <Field label="ИИН" value={company.manager.iin} mono />
@@ -306,6 +333,250 @@ function OwnersTab({ company }: { company: Company }) {
         </SectionCard>
       )}
 
+      {company.managerHistory && company.managerHistory.length > 0 && (
+        <SectionCard icon={UserCog} title="История руководителей" collapsible={false}>
+          <ul className="flex flex-col">
+            {company.managerHistory.map((m, i) => (
+              <li
+                key={i}
+                className="flex items-center justify-between gap-3 border-b border-border px-4 py-2.5 last:border-0 sm:px-5"
+              >
+                <span className="text-sm text-foreground">{String(m.name ?? "")}</span>
+                <span className="text-xs tabular-nums text-muted-foreground">
+                  {String(m.period ?? "")}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </SectionCard>
+      )}
+    </Stagger>
+  );
+}
+
+/* --------------------------------- Имущество --------------------------------- */
+
+function PropertyTab({ company }: { company: Company }) {
+  const nothing =
+    !company.realEstate?.length && !company.vehicles?.length && !company.encumbrances?.length;
+  if (nothing) {
+    return (
+      <EmptyState
+        icon={Home}
+        title="Имущество не зарегистрировано"
+        description="За организацией не числится недвижимости и транспорта."
+      />
+    );
+  }
+
+  return (
+    <Stagger>
+      {company.realEstate && company.realEstate.length > 0 && (
+        <SectionCard icon={Home} title="Недвижимость" collapsible={false}>
+          <TableWrap>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Тип</TableHead>
+                  <TableHead>Адрес</TableHead>
+                  <TableHead>Кадастровый номер</TableHead>
+                  <TableHead numeric>Доля</TableHead>
+                  <TableHead>Регистрация</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {company.realEstate.map((r, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="font-medium">{r.type}</TableCell>
+                    <TableCell>{r.address}</TableCell>
+                    <TableCell className="tabular-nums">{r.cadastral}</TableCell>
+                    <TableCell numeric>{r.share}</TableCell>
+                    <TableCell className="tabular-nums">{r.registered}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableWrap>
+        </SectionCard>
+      )}
+
+      {company.vehicles && company.vehicles.length > 0 && (
+        <SectionCard icon={Wallet} title="Транспорт" collapsible={false}>
+          <TableWrap>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Модель</TableHead>
+                  <TableHead>Гос. номер</TableHead>
+                  <TableHead>VIN</TableHead>
+                  <TableHead numeric>Год</TableHead>
+                  <TableHead>Обременение</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {company.vehicles.map((v, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="font-medium">{v.model}</TableCell>
+                    <TableCell className="tabular-nums">{v.plate}</TableCell>
+                    <TableCell className="tabular-nums">{v.vin}</TableCell>
+                    <TableCell numeric>{v.year}</TableCell>
+                    <TableCell>
+                      {v.encumbrance ? (
+                        <Badge tone="danger" size="sm">{v.encumbrance}</Badge>
+                      ) : (
+                        <span className="text-muted-foreground">нет</span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableWrap>
+        </SectionCard>
+      )}
+
+      {company.encumbrances && company.encumbrances.length > 0 && (
+        <SectionCard icon={Gavel} title="Обременения" collapsible={false}>
+          <ul className="flex flex-col">
+            {company.encumbrances.map((e, i) => (
+              <li
+                key={i}
+                className="flex flex-col gap-1 border-b border-border px-4 py-3 last:border-0 sm:px-5"
+              >
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-semibold text-foreground">
+                    {String(e.type ?? "")}
+                  </span>
+                  <Badge tone="danger" size="sm">{String(e.status ?? "")}</Badge>
+                  <span className="text-xs tabular-nums text-muted-foreground">
+                    {String(e.date ?? "")}
+                  </span>
+                </span>
+                <span className="text-xs text-muted-foreground">{String(e.detail ?? "")}</span>
+              </li>
+            ))}
+          </ul>
+        </SectionCard>
+      )}
+    </Stagger>
+  );
+}
+
+/* ------------------------------ Суды и проверки ------------------------------ */
+
+function LegalTab({ company }: { company: Company }) {
+  const nothing =
+    !company.courtCases?.length && !company.inspections?.length && !company.fines?.length;
+  if (nothing) {
+    return (
+      <EmptyState
+        icon={Gavel}
+        title="Судов и проверок не зафиксировано"
+        description="В отношении организации нет дел, проверок и штрафов."
+      />
+    );
+  }
+
+  return (
+    <Stagger>
+      {company.courtCases && company.courtCases.length > 0 && (
+        <SectionCard icon={Gavel} title="Судебные дела" collapsible={false}>
+          <TableWrap>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Вид</TableHead>
+                  <TableHead>Номер</TableHead>
+                  <TableHead>Роль</TableHead>
+                  <TableHead>Статус</TableHead>
+                  <TableHead>Дата</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {company.courtCases.map((c, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="font-medium">{c.kind}</TableCell>
+                    <TableCell className="tabular-nums">{c.number}</TableCell>
+                    <TableCell className="text-muted-foreground">{c.role}</TableCell>
+                    <TableCell>{c.status}</TableCell>
+                    <TableCell className="tabular-nums">{c.date}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableWrap>
+        </SectionCard>
+      )}
+
+      {company.inspections && company.inspections.length > 0 && (
+        <SectionCard icon={ShieldCheck} title="Проверки" collapsible={false}>
+          <ul className="flex flex-col">
+            {company.inspections.map((ins, i) => (
+              <li
+                key={i}
+                className="flex flex-col gap-1 border-b border-border px-4 py-3 last:border-0 sm:px-5"
+              >
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-semibold text-foreground">
+                    {String(ins.kind ?? "")}
+                  </span>
+                  <span className="text-xs text-muted-foreground">{String(ins.body ?? "")}</span>
+                  <span className="text-xs tabular-nums text-muted-foreground">
+                    {String(ins.date ?? "")}
+                  </span>
+                </span>
+                <span className="text-xs">
+                  <Badge tone={ins.tone === "bad" ? "danger" : "success"} size="sm">
+                    {String(ins.result ?? "")}
+                  </Badge>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </SectionCard>
+      )}
+
+      {company.fines && company.fines.length > 0 && (
+        <SectionCard icon={Gavel} title="Штрафы" collapsible={false}>
+          <TableWrap>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Основание</TableHead>
+                  <TableHead>Дата</TableHead>
+                  <TableHead numeric>Сумма</TableHead>
+                  <TableHead>Оплачен</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {company.fines.map((f, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{f.reason}</TableCell>
+                    <TableCell className="tabular-nums">{f.date}</TableCell>
+                    <TableCell numeric>{moneyFull(f.amount)}</TableCell>
+                    <TableCell>
+                      <Badge tone={f.paid ? "success" : "danger"} size="sm">
+                        {f.paid ? "Оплачен" : "Не оплачен"}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableWrap>
+        </SectionCard>
+      )}
+    </Stagger>
+  );
+}
+
+/* --------------------------------- Структура --------------------------------- */
+
+function StructureTab({ company }: { company: Company }) {
+  const founders = company.foundersDetailed ?? company.founders ?? [];
+
+  return (
+    <Stagger>
       <SectionCard
         icon={Users}
         title="Учредители"
@@ -340,7 +611,9 @@ function OwnersTab({ company }: { company: Company }) {
                     <TableCell className="tabular-nums">{String(f.iin ?? f.bin ?? "")}</TableCell>
                     <TableCell className="text-muted-foreground">{String(f.type ?? "—")}</TableCell>
                     <TableCell numeric>{String(f.share ?? "—")}</TableCell>
-                    <TableCell className="text-muted-foreground">{String(f.period ?? "—")}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {String(f.period ?? "—")}
+                    </TableCell>
                     <TableCell>
                       <RiskBadge level={asRisk(f.risk)} size="sm" />
                     </TableCell>
@@ -365,15 +638,53 @@ function OwnersTab({ company }: { company: Company }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {company.subsidiaries.map((s, i) => (
+                {company.subsidiaries.map((sub, i) => (
                   <TableRow key={i}>
                     <TableCell className="font-medium">
-                      {companyCase(String(s.name ?? ""))}
+                      {companyCase(String(sub.name ?? ""))}
                     </TableCell>
-                    <TableCell className="tabular-nums">{String(s.bin ?? "")}</TableCell>
-                    <TableCell numeric>{String(s.share ?? "—")}</TableCell>
+                    <TableCell className="tabular-nums">{String(sub.bin ?? "")}</TableCell>
+                    <TableCell numeric>{String(sub.share ?? "—")}</TableCell>
                     <TableCell>
-                      <RiskBadge level={asRisk(s.risk)} size="sm" />
+                      <RiskBadge level={asRisk(sub.risk)} size="sm" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableWrap>
+        </SectionCard>
+      )}
+
+      {company.relatedEntities && company.relatedEntities.length > 0 && (
+        <SectionCard
+          icon={Network}
+          title="Связанные организации"
+          subtitle="Общие учредители и аффилированность по цепочке поставок"
+          collapsible={false}
+        >
+          <TableWrap>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Наименование</TableHead>
+                  <TableHead>БИН</TableHead>
+                  <TableHead>Характер связи</TableHead>
+                  <TableHead>Риск</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {company.relatedEntities.map((r, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="font-medium">
+                      {companyCase(String(r.name ?? ""))}
+                    </TableCell>
+                    <TableCell className="tabular-nums">{String(r.bin ?? "")}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {String(r.relation ?? "")}
+                    </TableCell>
+                    <TableCell>
+                      <RiskBadge level={asRisk(r.risk)} size="sm" />
                     </TableCell>
                   </TableRow>
                 ))}

@@ -178,6 +178,21 @@ export interface Company {
   bankDetails?: Array<Record<string, string>>;
   licenses?: Array<Record<string, string>>;
   subsidiaries?: Array<Record<string, unknown>>;
+  /** Головные организации; в фикстурах бывает пустым массивом. */
+  parents?: Array<Record<string, unknown>>;
+  /** Связанные лица: общий учредитель, аффилированность по цепочке поставок. */
+  relatedEntities?: Array<Record<string, unknown>>;
+  /** Чек-лист благонадёжности юрлица — как trustFlags/trustChecks у человека. */
+  reliabilityFlags?: string[];
+  reliabilityChecks?: string[];
+  courtCases?: CourtCase[];
+  fines?: Fine[];
+  inspections?: Array<Record<string, unknown>>;
+  encumbrances?: Array<Record<string, unknown>>;
+  enforcementDebt?: unknown;
+  execCriminalRecord?: unknown;
+  execWanted?: unknown;
+  procurement?: Record<string, unknown>;
 }
 
 /** Таможенная декларация (ВЭД). */

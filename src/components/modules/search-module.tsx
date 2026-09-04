@@ -205,7 +205,7 @@ export function SearchModule() {
         items={[
           { id: "all", label: "Все", count: counts.all },
           { id: "person", label: "Физлица", count: counts.person },
-          { id: "company", label: "Юрлица", count: counts.company },
+          { id: "company", label: "Юр. лица", count: counts.company },
         ]}
       />
 
