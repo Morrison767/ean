@@ -28,6 +28,7 @@ import { Screen } from "@/components/app/screen";
 import { GroupedBars, SERIES_COLORS } from "@/components/charts/grouped-bars";
 import { SchemeChain } from "@/components/charts/scheme-chain";
 import { InvoiceDialog } from "@/components/modules/invoice-dialog";
+import { SignalCards } from "@/components/modules/signal-cards";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionCard } from "@/components/ui/section-card";
@@ -54,6 +55,7 @@ import {
   bucketSum,
   type EsfSeriesKey,
 } from "@/lib/esf-series";
+import { buildEsfSignals } from "@/lib/esf-signals";
 import { money, moneyFull, num, percent } from "@/lib/format";
 import { cn, companyCase } from "@/lib/utils";
 import { useApp } from "@/store/use-app";
@@ -193,7 +195,16 @@ export function EsfProfile({
           className="flex flex-col gap-4"
         >
           {tab === "dashboard" && (
-            <Dashboard cp={cp} sales={sales} purchases={purchases} invoices={invoices} period={period} />
+            <Dashboard
+              cp={cp}
+              sales={sales}
+              purchases={purchases}
+              invoices={invoices}
+              scoped={scoped}
+              company={company}
+              schemes={schemes}
+              period={period}
+            />
           )}
           {tab === "counterparties" && <CounterpartiesTab cp={cp} scoped={scoped} />}
           {tab === "operations" && <OperationsTab cp={cp} scoped={scoped} />}
@@ -212,14 +223,25 @@ function Dashboard({
   sales,
   purchases,
   invoices,
+  scoped,
+  company,
+  schemes,
   period,
 }: {
   cp: Counterparty;
   sales: Invoice[];
   purchases: Invoice[];
   invoices: Invoice[];
+  scoped: Invoice[];
+  company?: Company;
+  schemes: SchemeGraph[];
   period: string;
 }) {
+  const companies = useApp((s) => s.db.companies);
+  const signals = useMemo(
+    () => buildEsfSignals({ bin: cp.bin, invoices: scoped, company, companies, schemes }),
+    [cp.bin, scoped, company, companies, schemes]
+  );
   /* Детализация внутри года: кварталы или месяцы — как в прежней версии. */
   const [grain, setGrain] = useState<"quarter" | "month">("quarter");
 
@@ -271,6 +293,8 @@ function Dashboard({
           </div>
         ))}
       </div>
+
+      <SignalCards signals={signals} />
 
       <SectionCard
         icon={LayoutDashboard}

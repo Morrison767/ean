@@ -330,6 +330,12 @@ export interface GraphEdge {
 }
 
 export interface SchemeGraph {
+  /**
+   * Набор, из которого пришла схема. В прежней версии это были четыре
+   * отдельные переменные, и проверки смотрели каждая в свою: признак
+   * «транзитные схемы» ищет только среди цепочек поставок.
+   */
+  group: "money" | "circular" | "supply" | "export";
   title: string;
   risk: RiskLevel;
   nodes: GraphNode[];

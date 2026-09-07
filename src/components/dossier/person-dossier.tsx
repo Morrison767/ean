@@ -18,6 +18,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   Briefcase,
   Building2,
+  ChevronRight,
   Download,
   GraduationCap,
   Landmark,
@@ -45,6 +46,14 @@ import { SourceDialog, sourceFor, type SourceRecord } from "@/components/dossier
 import { CompanyLink, PersonLink } from "@/components/dossier/subject-link";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionCard } from "@/components/ui/section-card";
 import { ReportProgress, useReportProgress } from "@/components/ui/report-progress";
@@ -258,7 +267,12 @@ function PersonalTab({ person }: { person: Person }) {
       )}
 
       {person.addresses && person.addresses.length > 0 && (
-        <SectionCard icon={Building2} title="Адреса" collapsible={false}>
+        <SectionCard
+          icon={Building2}
+          title="Адреса"
+          collapsible={false}
+          action={<AddressHistory addresses={person.addresses} />}
+        >
           <ul className="flex flex-col">
             {person.addresses.map((a, i) => (
               <li
@@ -930,5 +944,55 @@ export function BackToSearch() {
     <Link href="/search" className="text-sm text-link hover:text-link-hover">
       ← К поиску
     </Link>
+  );
+}
+
+/**
+ * История адресов — окно из прежней версии.
+ *
+ * Список в карточке показывает адреса подряд, а окно — как историю: адрес
+ * регистрации выделен, у каждой записи виден период. На узком экране список
+ * в карточке обрезается, и окно остаётся единственным полным видом.
+ */
+function AddressHistory({ addresses }: { addresses: Array<Record<string, string>> }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button variant="ghost" size="sm" iconRight={ChevronRight} onClick={() => setOpen(true)}>
+        {`История адресов (${addresses.length})`}
+      </Button>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Building2 className="h-4 w-4 shrink-0 text-primary" />
+              {`История адресов (${addresses.length})`}
+            </DialogTitle>
+          </DialogHeader>
+
+          <DialogBody className="flex flex-col gap-2">
+            {addresses.map((a, i) => (
+              <div key={i} className="rounded-10 border border-border bg-surface px-3 py-2.5">
+                <div className="flex items-center gap-2">
+                  <Badge tone={a.type === "Регистрация" ? "brand" : "neutral"} size="sm">
+                    {a.type}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">{a.period}</span>
+                </div>
+                <div className="mt-1 text-sm text-foreground">{a.address}</div>
+              </div>
+            ))}
+          </DialogBody>
+
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Закрыть
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

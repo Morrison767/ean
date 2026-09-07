@@ -38,7 +38,7 @@ import type {
   Transaction,
 } from "./types";
 
-export const SEED_VERSION = 1;
+export const SEED_VERSION = 2;
 
 /**
  * JSON приходит с широкими типами (string вместо литеральных объединений),
@@ -73,12 +73,14 @@ export function createSeed(): Database {
     statements: as<Statement[]>(statements),
     transactions: as<Transaction[]>(transactions),
     audit: as<AuditEntry[]>(audit),
-    /* Схемы лежали в прежней сборке четырьмя отдельными переменными. */
+    /* Схемы лежали в прежней сборке четырьмя отдельными переменными.
+       Сливаем в один список, но помечаем происхождение: проверки смотрят
+       каждая в свой набор, и без пометки они начинают видеть чужие схемы. */
     schemes: [
-      ...as<SchemeGraph[]>(graphA),
-      ...as<SchemeGraph[]>(graphB),
-      ...as<SchemeGraph[]>(graphC),
-      ...as<SchemeGraph[]>(graphD),
+      ...as<SchemeGraph[]>(graphA).map((s) => ({ ...s, group: "money" as const })),
+      ...as<SchemeGraph[]>(graphB).map((s) => ({ ...s, group: "circular" as const })),
+      ...as<SchemeGraph[]>(graphC).map((s) => ({ ...s, group: "supply" as const })),
+      ...as<SchemeGraph[]>(graphD).map((s) => ({ ...s, group: "export" as const })),
     ],
     checklists: {
       person: as<ChecklistSection[]>(checklistPerson),
