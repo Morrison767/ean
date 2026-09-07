@@ -16,10 +16,12 @@ import {
   FileText,
   Landmark,
   Network,
+  Upload,
   Users,
 } from "lucide-react";
 
 import { Screen } from "@/components/app/screen";
+import { UploadStatementDialog } from "@/components/modules/upload-statement-dialog";
 import { BarList } from "@/components/charts/bar-list";
 import { SchemeChain } from "@/components/charts/scheme-chain";
 import {
@@ -28,6 +30,7 @@ import {
   useRegistryFilter,
 } from "@/components/modules/registry";
 import { Badge, RiskBadge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { KpiTile } from "@/components/ui/kpi-tile";
 import { SectionCard } from "@/components/ui/section-card";
 import { Stagger } from "@/components/ui/stagger";
@@ -61,6 +64,7 @@ export default function StatementsPage() {
   const transactions = useApp((s) => s.db.transactions);
   const schemes = useApp((s) => s.db.schemes);
   const [tab, setTab] = useState("list");
+  const [uploadOpen, setUploadOpen] = useState(false);
 
   const totals = useMemo(
     () => ({
@@ -73,7 +77,16 @@ export default function StatementsPage() {
   );
 
   return (
-    <Screen title="Банковские выписки" subtitle="Загруженные выписки и операции по счетам">
+    <Screen
+      title="Банковские выписки"
+      subtitle="Загруженные выписки и операции по счетам"
+      actions={
+        <Button icon={Upload} onClick={() => setUploadOpen(true)}>
+          Загрузить выписку
+        </Button>
+      }
+    >
+      <UploadStatementDialog open={uploadOpen} onOpenChange={setUploadOpen} />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiTile label="Выписок" value={num(statements.length)} icon={FileText} />
         <KpiTile label="Поступления" value={money(totals.in)} icon={ArrowDownLeft} tone="success" />

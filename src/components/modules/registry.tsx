@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import { Pagination, usePagination } from "@/components/ui/pagination";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SegmentedControl } from "@/components/ui/tabs";
 import { Table, TableBody, TableHeader, TableRow, TableWrap } from "@/components/ui/table";
@@ -98,12 +99,16 @@ export function RegistryTable({
   unit,
 }: {
   head: React.ReactNode;
-  rows: React.ReactNode;
+  /** Строки массивом: обвязка сама режет их на страницы. */
+  rows: React.ReactNode[];
   /** Показывается вместо таблицы, когда после фильтра ничего не осталось. */
   empty: { title: string; description?: string };
   total: number;
   unit: [string, string, string];
 }) {
+  /* Ключ сброса — длина выборки: после фильтра страница возвращается к первой. */
+  const page = usePagination(rows, rows.length);
+
   if (total === 0) {
     return <EmptyState icon={Search} title={empty.title} description={empty.description} />;
   }
@@ -111,7 +116,7 @@ export function RegistryTable({
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-muted-foreground">
-        Показано {counted(total, ...unit)}
+        Всего {counted(total, ...unit)}
       </span>
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
         <TableWrap>
@@ -119,9 +124,21 @@ export function RegistryTable({
             <TableHeader>
               <TableRow>{head}</TableRow>
             </TableHeader>
-            <TableBody>{rows}</TableBody>
+            <TableBody>{page.slice}</TableBody>
           </Table>
         </TableWrap>
+        <div className="border-t border-border px-4 py-2.5">
+          <Pagination
+            start={page.start}
+            end={page.end}
+            total={page.total}
+            page={page.page}
+            pages={page.pages}
+            size={page.size}
+            onPage={page.setPage}
+            onSize={page.setSize}
+          />
+        </div>
       </div>
     </div>
   );

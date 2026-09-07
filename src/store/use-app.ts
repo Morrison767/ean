@@ -25,7 +25,7 @@ import {
   type Prefs,
 } from "@/lib/storage";
 import { createSeed, type Database } from "@/data/seed";
-import type { AuditEntry, Company, Person, Subject } from "@/data/types";
+import type { AuditEntry, Company, Person, Statement, Subject } from "@/data/types";
 
 /** Кто «работает» в прототипе. Логина по-настоящему нет — это демо-сеанс. */
 export interface Session {
@@ -61,6 +61,14 @@ interface AppState {
   toggleSidebar: () => void;
   /** Запись в журнал действий: прототип ведёт его как настоящая система. */
   log: (entry: Omit<AuditEntry, "id" | "ts" | "user">) => void;
+  /** Добавить выписку из окна загрузки. Файл никуда не уходит — прототип. */
+  addStatement: (draft: {
+    name: string;
+    holder: string;
+    account: string;
+    period: string;
+    comment?: string;
+  }) => void;
   resetDemo: () => void;
 }
 
@@ -146,6 +154,37 @@ export const useApp = create<AppState>((set, get) => ({
     const next: Database = { ...db, audit: [record, ...db.audit] };
     saveDatabase(next);
     set({ db: next });
+  },
+
+  addStatement: (draft) => {
+    const { db } = get();
+    /* Новая выписка приходит необработанной: счётчик операций и суммы
+       появятся, когда её «обработают». Так вела себя и прежняя версия. */
+    const record: Statement = {
+      id: `ST-${String(db.statements.length + 1).padStart(3, "0")}`,
+      name: draft.name,
+      holder: draft.holder,
+      holderBin: "—",
+      account: draft.account,
+      period: draft.period,
+      format: draft.name.split(".").pop()?.toUpperCase() ?? "PDF",
+      status: "Обработка…",
+      txCount: 0,
+      risk: "none",
+      totalIn: 0,
+      totalOut: 0,
+      counterparties: 0,
+    };
+    const next: Database = { ...db, statements: [record, ...db.statements] };
+    saveDatabase(next);
+    set({ db: next });
+    get().log({
+      action: "upload",
+      subject: draft.name,
+      subjectType: "statement",
+      ip: "10.0.1.12",
+      status: "success",
+    });
   },
 
   resetDemo: () => set({ db: resetDatabase() }),
