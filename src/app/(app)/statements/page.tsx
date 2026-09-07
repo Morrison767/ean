@@ -16,6 +16,7 @@ import {
   FileText,
   Landmark,
   Network,
+  Search,
   Upload,
   Users,
 } from "lucide-react";
@@ -30,6 +31,7 @@ import {
   useRegistryFilter,
 } from "@/components/modules/registry";
 import { Badge, RiskBadge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { KpiTile } from "@/components/ui/kpi-tile";
 import { SectionCard } from "@/components/ui/section-card";
@@ -117,6 +119,19 @@ function StatementList({
   transactions: Transactions;
 }) {
   const [selected, setSelected] = useState<string | null>(statements[0]?.id ?? null);
+  /* Поиск по списку выписок — как в прежней версии: файл, владелец, счёт, БИН. */
+  const [term, setTerm] = useState("");
+
+  const visible = useMemo(() => {
+    const q = term.trim().toLowerCase();
+    if (!q) return statements;
+    return statements.filter((s) =>
+      [s.name, s.holder, s.account, s.holderBin].some((v) =>
+        String(v ?? "").toLowerCase().includes(q)
+      )
+    );
+  }, [statements, term]);
+
   const rows = useMemo(
     () => transactions.filter((t) => t.stmtId === selected),
     [transactions, selected]
@@ -125,6 +140,14 @@ function StatementList({
 
   return (
     <Stagger>
+      <Input
+        icon={Search}
+        value={term}
+        onChange={(e) => setTerm(e.target.value)}
+        placeholder="Поиск по файлу, владельцу, счёту, БИН…"
+        className="sm:max-w-lg"
+      />
+
       <SectionCard icon={Landmark} title="Выписки" collapsible={false}>
         <TableWrap>
           <Table>
@@ -141,7 +164,7 @@ function StatementList({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {statements.map((s) => (
+              {visible.map((s) => (
                 <TableRow
                   key={s.id}
                   interactive
