@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 
 import { Screen } from "@/components/app/screen";
-import { BarList } from "@/components/charts/bar-list";
+import { ShareDonut } from "@/components/charts/share-donut";
 import { SchemeChain } from "@/components/charts/scheme-chain";
 import { Trend } from "@/components/charts/trend";
 import { Badge, RiskBadge } from "@/components/ui/badge";
@@ -495,12 +495,7 @@ function GeographyTab({
 }) {
   const mk = (kind: "import" | "export") =>
     groupSum(scoped.filter((d) => d.type === kind), (d) => d.countryCode, (d) => d.valueUsd).map(
-      (g) => ({
-        label: COUNTRY_NAME[g.key] ?? g.key,
-        value: g.value,
-        display: usd(g.value),
-        hint: `${g.count} ДТ`,
-      })
+      (g) => ({ key: g.key, label: COUNTRY_NAME[g.key] ?? g.key, value: g.value, display: usd(g.value) })
     );
 
   const chains = schemes.filter(
@@ -513,10 +508,10 @@ function GeographyTab({
     <Stagger>
       <div className="grid gap-4 lg:grid-cols-2">
         <SectionCard icon={ArrowDownToLine} title="Импорт по странам" collapsible={false}>
-          <BarList items={mk("import")} />
+          <ShareDonut items={mk("import")} />
         </SectionCard>
         <SectionCard icon={ArrowUpFromLine} title="Экспорт по странам" collapsible={false}>
-          <BarList items={mk("export")} />
+          <ShareDonut items={mk("export")} />
         </SectionCard>
       </div>
 
