@@ -9,7 +9,7 @@
  * поиск и фильтр вели себя во всех реестрах одинаково.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -22,13 +22,36 @@ import type { RiskLevel } from "@/data/types";
 
 export type RiskFilter = "all" | "risky" | "clean";
 
+/**
+ * Фокус на субъекте из адреса (?focus=…).
+ *
+ * Читаем из location, а не через useSearchParams: тот требует границы
+ * Suspense у всей страницы, а нужен здесь только начальный текст фильтра.
+ * На сервере параметра нет — поэтому берём его после монтирования.
+ */
+export function useFocusParam(): string {
+  const [focus, setFocus] = useState("");
+  useEffect(() => {
+    const v = new URLSearchParams(window.location.search).get("focus");
+    if (v) setFocus(v);
+  }, []);
+  return focus;
+}
+
 export function useRegistryFilter<T extends { risk?: RiskLevel }>(
   items: T[],
   /** Поля, по которым идёт текстовый поиск. */
   searchable: (item: T) => Array<string | number | undefined>
 ) {
+  const focus = useFocusParam();
   const [term, setTerm] = useState("");
   const [risk, setRisk] = useState<RiskFilter>("all");
+
+  /* Переход из досье («Открыть в модуле …») приносит субъект в адресе —
+     подставляем его в поиск, чтобы модуль открылся уже отфильтрованным. */
+  useEffect(() => {
+    if (focus) setTerm(focus);
+  }, [focus]);
 
   const filtered = useMemo(() => {
     const q = term.toLowerCase().trim();

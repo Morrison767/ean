@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 
 import { Screen } from "@/components/app/screen";
+import { OpenInModule } from "@/components/dossier/person-dossier";
 import { Checklist } from "@/components/dossier/checklist";
 import { DataList, Field } from "@/components/dossier/data-list";
 import { ScoreMeter } from "@/components/dossier/score-meter";
@@ -77,7 +78,7 @@ const TABS = [
 ];
 
 const asRisk = (v: unknown): RiskLevel =>
-  (["none", "low", "medium", "high", "critical"] as const).includes(v as RiskLevel)
+  (["none", "medium", "high"] as const).includes(v as RiskLevel)
     ? (v as RiskLevel)
     : "none";
 
@@ -776,7 +777,12 @@ function VedTab({
 
   return (
     <Stagger>
-      <SectionCard icon={Globe} title="Внешнеэкономическая деятельность" collapsible={false}>
+      <SectionCard
+        icon={Globe}
+        title="Внешнеэкономическая деятельность"
+        collapsible={false}
+        action={<OpenInModule href={`/ved?focus=${encodeURIComponent(company.bin)}`} module="ВЭД" />}
+      >
         <DataList cols={3} className="p-4 sm:p-5">
           <Field label="Импорт" value={v?.totalImport != null ? usd(v.totalImport) : "—"} mono accent />
           <Field label="Экспорт" value={v?.totalExport != null ? usd(v.totalExport) : "—"} mono />
@@ -872,7 +878,13 @@ function ProcurementTab({
 
   return (
     <Stagger>
-      <SectionCard icon={ShoppingCart} title="Закупки" subtitle={`${items.length} записей`} collapsible={false}>
+      <SectionCard
+        icon={ShoppingCart}
+        title="Закупки"
+        subtitle={`${items.length} записей`}
+        collapsible={false}
+        action={<OpenInModule href={`/procurement?focus=${encodeURIComponent(bin)}`} module="Закупки" />}
+      >
         <TableWrap>
           <Table>
             <TableHeader>
@@ -930,6 +942,7 @@ function EsfTab({ items, bin }: { items: Database["invoices"]; bin: string }) {
         title="Счета-фактуры"
         subtitle={`${items.length} записей`}
         collapsible={false}
+        action={<OpenInModule href={`/esf/${bin}`} module="ЭСФ" />}
       >
         <TableWrap>
           <Table>

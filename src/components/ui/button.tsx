@@ -76,7 +76,13 @@ const ICON_SIZE: Record<string, string> = {
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  /** Отрисовать как дочерний элемент — ссылка со стилями кнопки. */
+  /**
+   * Отрисовать как дочерний элемент — ссылка со стилями кнопки.
+   *
+   * Со значками несовместимо: Slot подставляет свойства ровно одному
+   * потомку, а значок рядом с подписью делает их двумя. Для ссылки со
+   * значком берите buttonVariants() и кладите значок внутрь ссылки.
+   */
   asChild?: boolean;
   icon?: LucideIcon;
   iconRight?: LucideIcon;
@@ -103,6 +109,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) {
     const Comp = asChild ? Slot : "button";
     const iconClass = ICON_SIZE[size ?? "md"];
+
+    /* Значки рядом с asChild ломают Slot — отдаём только содержимое. */
+    if (asChild) {
+      return (
+        <Comp
+          ref={ref}
+          className={cn(buttonVariants({ variant, size, block }), className)}
+          {...props}
+        >
+          {children}
+        </Comp>
+      );
+    }
 
     return (
       <Comp

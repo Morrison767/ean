@@ -55,7 +55,7 @@ export interface Counterparty {
   products: string[];
 }
 
-const RISK_ORDER: RiskLevel[] = ["none", "low", "medium", "high", "critical"];
+const RISK_ORDER: RiskLevel[] = ["none", "medium", "high"];
 
 /** Свод контрагентов по всем счетам-фактурам. */
 export function buildCounterparties(invoices: Invoice[]): Counterparty[] {

@@ -19,10 +19,8 @@ import type { RiskLevel } from "@/data/types";
 
 const TRACK: Record<RiskLevel, string> = {
   none: "bg-success",
-  low: "bg-success",
   medium: "bg-warning",
   high: "bg-danger",
-  critical: "bg-danger",
 };
 
 export function ScoreMeter({

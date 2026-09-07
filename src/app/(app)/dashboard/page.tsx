@@ -48,7 +48,7 @@ export default function DashboardPage() {
 
   /* Свежие угрозы — субъекты с ненулевым риском, тяжёлые сверху. */
   const threats = useMemo(() => {
-    const weight = { critical: 0, high: 1, medium: 2, low: 3, none: 4 } as const;
+    const weight = { high: 0, medium: 1, none: 2 } as const;
     return allSubjects(db)
       .filter((s) => s.riskLevel !== "none")
       .sort((a, b) => weight[a.riskLevel] - weight[b.riskLevel])

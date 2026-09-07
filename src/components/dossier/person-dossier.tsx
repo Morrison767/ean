@@ -28,6 +28,7 @@ import {
   Plane,
   ShieldCheck,
   ShoppingCart,
+  ExternalLink,
   Sparkles,
   Train,
   User,
@@ -41,7 +42,7 @@ import { DataList, Field } from "@/components/dossier/data-list";
 import { DocumentsTabs } from "@/components/dossier/documents-tabs";
 import { ScoreMeter } from "@/components/dossier/score-meter";
 import { Badge, RiskBadge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionCard } from "@/components/ui/section-card";
 import { Stagger } from "@/components/ui/stagger";
@@ -74,7 +75,7 @@ const TABS = [
 
 /** Значение риска из фикстуры может прийти строкой вне перечисления. */
 const asRisk = (v: unknown): RiskLevel =>
-  (["none", "low", "medium", "high", "critical"] as const).includes(v as RiskLevel)
+  (["none", "medium", "high"] as const).includes(v as RiskLevel)
     ? (v as RiskLevel)
     : "none";
 
@@ -483,7 +484,12 @@ function ProcurementTab({ person }: { person: Person }) {
 
   return (
     <Stagger>
-      <SectionCard icon={ShoppingCart} title="Участие в госзакупках" collapsible={false}>
+      <SectionCard
+        icon={ShoppingCart}
+        title="Участие в госзакупках"
+        collapsible={false}
+        action={<OpenInModule href={`/procurement?focus=${encodeURIComponent(person.fullName)}`} module="Закупки" />}
+      >
         <DataList cols={4} className="p-4 sm:p-5">
           <Field label="Роль" value={p.role} />
           <Field label="Участвует с" value={p.since} mono />
@@ -585,7 +591,12 @@ function FinanceTab({ person }: { person: Person }) {
 
   return (
     <Stagger>
-      <SectionCard icon={Landmark} title="Сводка по счетам" collapsible={false}>
+      <SectionCard
+        icon={Landmark}
+        title="Сводка по счетам"
+        collapsible={false}
+        action={<OpenInModule href={`/statements?focus=${encodeURIComponent(person.fullName)}`} module="Выписки" />}
+      >
         <DataList cols={4} className="p-4 sm:p-5">
           <Field label="Счетов" value={f.accounts != null ? String(f.accounts) : "—"} mono />
           <Field label="Период" value={f.period} />
@@ -867,6 +878,24 @@ function TravelTab({ person }: { person: Person }) {
         </SectionCard>
       )}
     </Stagger>
+  );
+}
+
+/**
+ * Переход из досье в модуль с фокусом на субъекте.
+ *
+ * В прежней версии это была кнопка «Открыть в модуле «X»» — она уносила в
+ * модуль уже отфильтрованным по субъекту, а не на его пустой вход. Фокус
+ * передаётся адресом, поэтому ссылку можно переслать.
+ */
+export function OpenInModule({ href, module }: { href: string; module: string }) {
+  /* Ссылка со стилями кнопки, а не Button asChild: Slot принимает ровно
+     одного потомка, а кнопке нужны подпись и значок — вместе они его ломают. */
+  return (
+    <Link href={href} className={buttonVariants({ variant: "secondary", size: "sm" })}>
+      {`Открыть в модуле «${module}»`}
+      <ExternalLink className="h-4 w-4 shrink-0" strokeWidth={2} />
+    </Link>
   );
 }
 
