@@ -11,7 +11,7 @@
  * Вкладка живёт в адресе (?tab=…): ссылку на раздел досье можно переслать.
  */
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -41,6 +41,7 @@ import { Checklist } from "@/components/dossier/checklist";
 import { DataList, Field } from "@/components/dossier/data-list";
 import { DocumentsTabs } from "@/components/dossier/documents-tabs";
 import { ScoreMeter } from "@/components/dossier/score-meter";
+import { SourceDialog, sourceFor, type SourceRecord } from "@/components/dossier/source-dialog";
 import { CompanyLink, PersonLink } from "@/components/dossier/subject-link";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -92,6 +93,7 @@ export function PersonDossier({
   const params = useSearchParams();
   const reduce = useReducedMotion();
   const report = useReportProgress();
+  const [source, setSource] = useState<SourceRecord | null>(null);
 
   const tab = params.get("tab") ?? "trust";
   const setTab = (id: string) =>
@@ -110,6 +112,7 @@ export function PersonDossier({
   return (
     <Screen className="max-w-[1500px]">
       <ReportProgress phase={report.phase} label="Формируется досье…" />
+      <SourceDialog record={source} onClose={() => setSource(null)} />
       <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
         {/* --------------------------- левая карточка --------------------------- */}
         <aside className="flex flex-col gap-4 lg:sticky lg:top-0 lg:self-start">
@@ -192,6 +195,11 @@ export function PersonDossier({
                   checks={(person.trustChecks ?? []).filter(
                     (c): c is string => typeof c === "string"
                   )}
+                  onOpenSource={(item) => {
+                    const record = sourceFor(person, item);
+                    if (record) setSource(record);
+                    return !!record;
+                  }}
                 />
               )}
               {tab === "personal" && <PersonalTab person={person} />}

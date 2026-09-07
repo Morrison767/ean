@@ -12,7 +12,7 @@
  * зелёных галочках.
  */
 
-import { AlertTriangle, CheckCircle2, ShieldAlert } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ChevronRight, ShieldAlert } from "lucide-react";
 
 import { SectionCard } from "@/components/ui/section-card";
 import { Stagger } from "@/components/ui/stagger";
@@ -31,12 +31,15 @@ export function Checklist({
   sections,
   flags,
   checks,
+  onOpenSource,
 }: {
   sections: ChecklistSection[];
   /** Подтверждённые срабатывания. */
   flags: string[];
   /** Пункты, требующие проверки. */
   checks: string[];
+  /** Открыть запись источника. Возвращает false, если её нет для пункта. */
+  onOpenSource?: (item: string) => boolean;
 }) {
   const verdictOf = (item: string): Verdict =>
     flags.includes(item) ? "hit" : checks.includes(item) ? "attention" : "clean";
@@ -71,11 +74,25 @@ export function Checklist({
               <ul className="flex flex-col">
                 {section.items.map((item) => {
                   const v = verdictOf(item);
+                  /* У срабатывания может быть запись источника — тогда строка
+                     кликабельна: флаг без доказательства проверять негде. */
+                  const hasSource = v !== "clean" && !!onOpenSource;
+                  const Row = hasSource ? "button" : "div";
                   return (
-                    <li
-                      key={item}
-                      className="flex items-center justify-between gap-3 border-b border-border px-4 py-2 last:border-0 sm:px-5"
-                    >
+                    <li key={item} className="border-b border-border last:border-0">
+                      <Row
+                        {...(hasSource
+                          ? {
+                              type: "button" as const,
+                              onClick: () => onOpenSource?.(item),
+                              title: "Открыть источник данных",
+                            }
+                          : {})}
+                        className={cn(
+                          "flex w-full items-center justify-between gap-3 px-4 py-2 text-left sm:px-5",
+                          hasSource && "transition-colors hover:bg-surface"
+                        )}
+                      >
                       <span className="flex min-w-0 items-center gap-2">
                         {v === "clean" ? (
                           <CheckCircle2 className="h-4 w-4 shrink-0 text-icon-success" />
@@ -88,9 +105,20 @@ export function Checklist({
                           {item}
                         </span>
                       </span>
-                      <span className={cn("shrink-0 text-xs", VERDICT[v].className)}>
-                        {VERDICT[v].label}
-                      </span>
+                        <span className="flex shrink-0 items-center gap-1.5">
+                          <span className={cn("text-xs", VERDICT[v].className)}>
+                            {VERDICT[v].label}
+                          </span>
+                          {hasSource && (
+                            <ChevronRight
+                              className={cn(
+                                "h-3.5 w-3.5",
+                                v === "hit" ? "text-danger" : "text-warning-foreground"
+                              )}
+                            />
+                          )}
+                        </span>
+                      </Row>
                     </li>
                   );
                 })}
