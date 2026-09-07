@@ -41,10 +41,12 @@ import { Checklist } from "@/components/dossier/checklist";
 import { DataList, Field } from "@/components/dossier/data-list";
 import { DocumentsTabs } from "@/components/dossier/documents-tabs";
 import { ScoreMeter } from "@/components/dossier/score-meter";
+import { CompanyLink, PersonLink } from "@/components/dossier/subject-link";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionCard } from "@/components/ui/section-card";
+import { ReportProgress, useReportProgress } from "@/components/ui/report-progress";
 import { Stagger } from "@/components/ui/stagger";
 import { UnderlineTabs } from "@/components/ui/tabs";
 import {
@@ -89,6 +91,7 @@ export function PersonDossier({
   const router = useRouter();
   const params = useSearchParams();
   const reduce = useReducedMotion();
+  const report = useReportProgress();
 
   const tab = params.get("tab") ?? "trust";
   const setTab = (id: string) =>
@@ -106,6 +109,7 @@ export function PersonDossier({
 
   return (
     <Screen className="max-w-[1500px]">
+      <ReportProgress phase={report.phase} label="Формируется досье…" />
       <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
         {/* --------------------------- левая карточка --------------------------- */}
         <aside className="flex flex-col gap-4 lg:sticky lg:top-0 lg:self-start">
@@ -154,7 +158,7 @@ export function PersonDossier({
 
             <div className="flex flex-col gap-2 border-t border-border pt-4">
               <Button icon={Sparkles}>Портрет AI</Button>
-              <Button variant="secondary" icon={Download}>
+              <Button variant="secondary" icon={Download} onClick={report.start}>
                 Скачать досье
               </Button>
             </div>
@@ -231,7 +235,11 @@ function PersonalTab({ person }: { person: Person }) {
           <Field label="РКА" value={person.rka} mono />
           <Field label="Дата регистрации" value={person.regDate} />
           <Field label="Стаж" value={person.experience} />
-          <Field label="Супруг(а)" value={person.spouseName} span={2} />
+          <Field
+                label="Супруг(а)"
+                value={<PersonLink name={person.spouseName} iin={undefined} />}
+                span={2}
+              />
         </DataList>
       </SectionCard>
 
@@ -299,7 +307,9 @@ function PersonalTab({ person }: { person: Person }) {
                 {person.relatives.map((r, i) => (
                   <TableRow key={i}>
                     <TableCell className="text-muted-foreground">{r.relation}</TableCell>
-                    <TableCell className="font-medium">{r.fullName}</TableCell>
+                    <TableCell className="font-medium">
+                      <PersonLink name={r.fullName} iin={r.iin} />
+                    </TableCell>
                     <TableCell className="tabular-nums">{r.iin}</TableCell>
                     <TableCell className="tabular-nums">{r.phone}</TableCell>
                   </TableRow>
@@ -345,7 +355,10 @@ function AssetsTab({ person }: { person: Person }) {
                 businesses.map((b, i) => (
                   <TableRow key={i}>
                     <TableCell className="font-medium">
-                      {companyCase(String(b.name ?? ""))}
+                      <CompanyLink
+                        name={companyCase(String(b.name ?? ""))}
+                        bin={String(b.bin ?? "")}
+                      />
                     </TableCell>
                     <TableCell className="tabular-nums">{String(b.bin ?? "")}</TableCell>
                     <TableCell className="text-muted-foreground">
@@ -722,7 +735,9 @@ function LinksTab({ person }: { person: Person }) {
                 <TableBody>
                   {gov.links.map((l, i) => (
                     <TableRow key={i}>
-                      <TableCell className="font-medium">{String(l.name ?? "")}</TableCell>
+                      <TableCell className="font-medium">
+                        <PersonLink name={String(l.name ?? "")} iin={String(l.iin ?? "")} />
+                      </TableCell>
                       <TableCell className="text-muted-foreground">
                         {String(l.relation ?? "")}
                       </TableCell>
@@ -762,7 +777,9 @@ function LinksTab({ person }: { person: Person }) {
               ) : (
                 connections.map((c, i) => (
                   <TableRow key={i}>
-                    <TableCell className="font-medium">{c.name}</TableCell>
+                    <TableCell className="font-medium">
+                      <PersonLink name={c.name} iin={c.iin} />
+                    </TableCell>
                     <TableCell className="text-muted-foreground">{c.relation}</TableCell>
                     <TableCell numeric>{c.level}</TableCell>
                     <TableCell>

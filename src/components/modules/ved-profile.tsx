@@ -36,6 +36,7 @@ import { Trend } from "@/components/charts/trend";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionCard } from "@/components/ui/section-card";
+import { ReportProgress, useReportProgress } from "@/components/ui/report-progress";
 import { Stagger } from "@/components/ui/stagger";
 import { SegmentedControl, UnderlineTabs } from "@/components/ui/tabs";
 import {
@@ -86,6 +87,7 @@ export function VedProfile({
   const [tab, setTab] = useState("dashboard");
   const [period, setPeriod] = useState<string>("all");
   const [grain, setGrain] = useState<"quarter" | "month">("quarter");
+  const report = useReportProgress();
 
   const years = useMemo(
     () => [...new Set(declarations.map((d) => yearOf(d.date)))].sort(),
@@ -99,6 +101,8 @@ export function VedProfile({
 
   return (
     <Screen className="max-w-[1500px]">
+      <ReportProgress phase={report.phase} label="Формируется отчёт по ВЭД…" />
+
       <button
         type="button"
         onClick={() => router.push("/ved?all=1")}
@@ -135,7 +139,7 @@ export function VedProfile({
             </Button>
           )}
           <Button icon={Sparkles}>Портрет AI</Button>
-          <Button variant="secondary" icon={Download}>
+          <Button variant="secondary" icon={Download} onClick={report.start}>
             Скачать отчёт по ВЭД
           </Button>
         </div>

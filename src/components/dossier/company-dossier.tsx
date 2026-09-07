@@ -40,10 +40,12 @@ import { OpenInModule } from "@/components/dossier/person-dossier";
 import { Checklist } from "@/components/dossier/checklist";
 import { DataList, Field } from "@/components/dossier/data-list";
 import { ScoreMeter } from "@/components/dossier/score-meter";
+import { CompanyLink, PersonLink } from "@/components/dossier/subject-link";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionCard } from "@/components/ui/section-card";
+import { ReportProgress, useReportProgress } from "@/components/ui/report-progress";
 import { Stagger } from "@/components/ui/stagger";
 import { UnderlineTabs } from "@/components/ui/tabs";
 import {
@@ -94,6 +96,7 @@ export function CompanyDossier({
   const router = useRouter();
   const params = useSearchParams();
   const reduce = useReducedMotion();
+  const report = useReportProgress();
 
   const tab = params.get("tab") ?? "trust";
   const setTab = (id: string) =>
@@ -117,6 +120,7 @@ export function CompanyDossier({
 
   return (
     <Screen className="max-w-[1500px]">
+      <ReportProgress phase={report.phase} label="Формируется досье…" />
       <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="flex flex-col gap-4 lg:sticky lg:top-0 lg:self-start">
           <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
@@ -173,7 +177,7 @@ export function CompanyDossier({
 
             <div className="flex flex-col gap-2 border-t border-border pt-4">
               <Button icon={Sparkles}>Портрет AI</Button>
-              <Button variant="secondary" icon={Download}>
+              <Button variant="secondary" icon={Download} onClick={report.start}>
                 Скачать досье
               </Button>
             </div>
@@ -321,7 +325,7 @@ function LeadershipTab({ company }: { company: Company }) {
       {company.manager && (
         <SectionCard icon={UserCog} title="Действующий руководитель" collapsible={false}>
           <DataList cols={3} className="p-4 sm:p-5">
-            <Field label="ФИО" value={company.manager.name} />
+            <Field label="ФИО" value={<PersonLink name={company.manager.name} iin={company.manager.iin} />} />
             <Field label="ИИН" value={company.manager.iin} mono />
             <Field label="Назначен" value={company.manager.appointedAt} mono />
             {company.manager.affiliated ? (
@@ -607,7 +611,14 @@ function StructureTab({ company }: { company: Company }) {
                 founders.map((f, i) => (
                   <TableRow key={i}>
                     <TableCell className="font-medium">
-                      {String(f.name ?? f.fullName ?? "")}
+                      {String(f.type ?? "") === "Юрлицо" ? (
+                        <CompanyLink name={String(f.name ?? "")} bin={String(f.bin ?? "")} />
+                      ) : (
+                        <PersonLink
+                          name={String(f.name ?? f.fullName ?? "")}
+                          iin={String(f.iin ?? "")}
+                        />
+                      )}
                     </TableCell>
                     <TableCell className="tabular-nums">{String(f.iin ?? f.bin ?? "")}</TableCell>
                     <TableCell className="text-muted-foreground">{String(f.type ?? "—")}</TableCell>
@@ -642,7 +653,10 @@ function StructureTab({ company }: { company: Company }) {
                 {company.subsidiaries.map((sub, i) => (
                   <TableRow key={i}>
                     <TableCell className="font-medium">
-                      {companyCase(String(sub.name ?? ""))}
+                      <CompanyLink
+                        name={companyCase(String(sub.name ?? ""))}
+                        bin={String(sub.bin ?? "")}
+                      />
                     </TableCell>
                     <TableCell className="tabular-nums">{String(sub.bin ?? "")}</TableCell>
                     <TableCell numeric>{String(sub.share ?? "—")}</TableCell>
@@ -678,7 +692,10 @@ function StructureTab({ company }: { company: Company }) {
                 {company.relatedEntities.map((r, i) => (
                   <TableRow key={i}>
                     <TableCell className="font-medium">
-                      {companyCase(String(r.name ?? ""))}
+                      <CompanyLink
+                        name={companyCase(String(r.name ?? ""))}
+                        bin={String(r.bin ?? "")}
+                      />
                     </TableCell>
                     <TableCell className="tabular-nums">{String(r.bin ?? "")}</TableCell>
                     <TableCell className="text-muted-foreground">

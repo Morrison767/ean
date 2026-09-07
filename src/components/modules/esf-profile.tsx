@@ -31,6 +31,7 @@ import { InvoiceDialog } from "@/components/modules/invoice-dialog";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionCard } from "@/components/ui/section-card";
+import { ReportProgress, useReportProgress } from "@/components/ui/report-progress";
 import { Stagger } from "@/components/ui/stagger";
 import { SegmentedControl, UnderlineTabs } from "@/components/ui/tabs";
 import {
@@ -93,6 +94,7 @@ export function EsfProfile({
   const reduce = useReducedMotion();
   const [tab, setTab] = useState("dashboard");
   const [period, setPeriod] = useState("all");
+  const report = useReportProgress();
 
   /* Годы фиксированы, как в прежней версии: демо-данные размечены под них. */
   const years = ESF_YEARS.map(String);
@@ -108,6 +110,8 @@ export function EsfProfile({
 
   return (
     <Screen className="max-w-[1500px]">
+      <ReportProgress phase={report.phase} label="Формируется список ЭСФ…" />
+
       <button
         type="button"
         onClick={() => router.push("/esf?all=1")}
@@ -149,7 +153,7 @@ export function EsfProfile({
             </Button>
           )}
           <Button icon={Sparkles}>Портрет AI</Button>
-          <Button variant="secondary" icon={Download}>
+          <Button variant="secondary" icon={Download} onClick={report.start}>
             Скачать список ЭСФ
           </Button>
         </div>
