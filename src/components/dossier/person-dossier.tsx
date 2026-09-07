@@ -41,6 +41,7 @@ import { Screen } from "@/components/app/screen";
 import { Checklist } from "@/components/dossier/checklist";
 import { DataList, Field } from "@/components/dossier/data-list";
 import { DocumentsTabs } from "@/components/dossier/documents-tabs";
+import { RelationsGraph } from "@/components/charts/relations-graph";
 import { ScoreMeter } from "@/components/dossier/score-meter";
 import { SourceDialog, sourceFor, type SourceRecord } from "@/components/dossier/source-dialog";
 import { CompanyLink, PersonLink } from "@/components/dossier/subject-link";
@@ -73,6 +74,7 @@ import { RISK_TAG_LABEL } from "@/config/dashboard";
 import { money, moneyFull, num, percent } from "@/lib/format";
 import { motionTokens } from "@/lib/motion";
 import { cn, companyCase } from "@/lib/utils";
+import { useApp } from "@/store/use-app";
 import type { ChecklistSection, Person, RiskLevel } from "@/data/types";
 
 const TABS = [
@@ -721,6 +723,8 @@ function FinanceTab({ person }: { person: Person }) {
 /* ---------------------------------- Связи ---------------------------------- */
 
 function LinksTab({ person }: { person: Person }) {
+  const router = useRouter();
+  const people = useApp((s) => s.db.people);
   const gov = person.govConnections as
     | {
         level?: string;
@@ -774,6 +778,24 @@ function LinksTab({ person }: { person: Person }) {
               </Table>
             </TableWrap>
           )}
+        </SectionCard>
+      )}
+
+      {connections.length > 0 && (
+        <SectionCard
+          icon={Network}
+          title="Схема связей"
+          subtitle={`${connections.length} связей · 3 уровня`}
+          collapsible={false}
+        >
+          <RelationsGraph
+            subjectName={person.fullName}
+            connections={connections}
+            onOpen={(c) => {
+              const target = people.find((p) => (c.iin && p.iin === c.iin) || p.fullName === c.name);
+              if (target) router.push(`/person/${target.id}`);
+            }}
+          />
         </SectionCard>
       )}
 
