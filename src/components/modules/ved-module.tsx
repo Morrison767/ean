@@ -5,22 +5,24 @@
  *
  * Сценарий как в прежней версии — вход это поиск, а не реестр деклараций.
  * Единица работы здесь участник ВЭД (компания), внутрь которого проваливаются;
- * общий список открывается ссылкой «Открыть весь реестр участников».
+ * вся картина по стране вместе с реестром деклараций открывается отдельной
+ * карточкой под поиском.
  */
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
-import { ChevronRight, Search, Star } from "lucide-react";
+import { ChevronRight, Globe2, Search, Star } from "lucide-react";
 
 import { Screen } from "@/components/app/screen";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
+import { CountryEntry } from "@/components/modules/country/entry";
 import { Stagger } from "@/components/ui/stagger";
 import { SegmentedControl } from "@/components/ui/tabs";
-import { usd } from "@/lib/format";
+import { num, usd } from "@/lib/format";
 import { motionTokens } from "@/lib/motion";
 import { companyCase } from "@/lib/utils";
 import { useApp } from "@/store/use-app";
@@ -52,6 +54,13 @@ export interface Participant {
 
 const RISK_ORDER: RiskLevel[] = ["none", "medium", "high"];
 
+/*
+  Тот же признак ИП, что в прежней версии.
+  Через \b здесь нельзя: границу слова JS определяет по [A-Za-z0-9_], и после
+  кириллической «П» её нет — «ИП Топливо-Сервис» не совпадёт.
+*/
+const IS_IP = /^\s*ИП[\s«".]/i;
+
 export function buildParticipants(
   declarations: Declaration[],
   companies: Company[]
@@ -67,7 +76,7 @@ export function buildParticipants(
       p = {
         bin: d.bin,
         name: d.company,
-        kind: /^\s*ИП\b/i.test(d.company) ? "ip" : "legal",
+        kind: IS_IP.test(d.company) ? "ip" : "legal",
         turnover: 0,
         imports: 0,
         exports: 0,
@@ -113,6 +122,15 @@ export function VedModule() {
     log({ action: "search", subject: query, subjectType: "ved", ip: "10.0.1.12", status: "success" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  const volume = useMemo(
+    () => declarations.reduce((sum, d) => sum + d.valueUsd, 0),
+    [declarations]
+  );
+  const countries = useMemo(
+    () => new Set(declarations.map((d) => d.countryCode)).size,
+    [declarations]
+  );
 
   const all = useMemo(
     () => buildParticipants(declarations, companies),
@@ -207,9 +225,17 @@ export function VedModule() {
             </div>
           </div>
 
-          <Button variant="ghost" iconRight={ChevronRight} onClick={() => router.push("/ved?all=1")}>
-            Открыть весь реестр участников
-          </Button>
+          <CountryEntry
+            href="/ved/overview"
+            icon={Globe2}
+            title="Открыть картину по стране"
+            description="Внешняя торговля целиком: импорт и экспорт по годам, сальдо, карта стран-партнёров, товарные группы — и полный реестр деклараций с фильтрами."
+            stats={[
+              { value: num(declarations.length), label: "деклараций" },
+              { value: usd(volume), label: "оборот" },
+              { value: num(countries), label: "стран-партнёров" },
+            ]}
+          />
         </motion.div>
       </Screen>
     );
@@ -256,7 +282,7 @@ export function VedModule() {
         <EmptyState
           icon={Search}
           title="Участники не найдены"
-          description="Попробуйте изменить запрос или открыть весь реестр участников."
+          description="Попробуйте изменить запрос или открыть сводку по стране."
         />
       ) : (
         <Stagger>

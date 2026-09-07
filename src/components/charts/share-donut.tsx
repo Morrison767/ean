@@ -32,12 +32,36 @@ export const SHARE_COLORS = [
 ];
 const OTHER_COLOR = "hsl(var(--border-strong))";
 
+/**
+ * Кольцо распределения по риску.
+ *
+ * Уровень риска — состояние, а не одна из категорий, поэтому цвета берутся
+ * статусные и закреплены за уровнями. Подставлять сюда категорийную палитру
+ * нельзя: синий «высокий риск» рядом с зелёным «без риска» читается ровно
+ * наоборот.
+ *
+ * Проверка палитры на этой тройке даёт ΔE 3.4 между жёлтым и зелёным при
+ * протанопии — то есть по одному цвету «средний риск» и «без риска» различит
+ * не каждый. Менять оттенки здесь нельзя: те же три цвета носят риск-бейджи по
+ * всему приложению, и расхождение кольца с бейджем рядом хуже, чем близость
+ * оттенков. Поэтому таблица уровней рядом с кольцом обязательна — она называет
+ * каждый уровень словами и даёт число, и цвет ни в одном месте не остаётся
+ * единственным носителем смысла. Убирать её из этой формы нельзя.
+ */
+export const RISK_SHARE_COLOR: Record<string, string> = {
+  high: "hsl(var(--hue-red))",
+  medium: "hsl(var(--hue-amber))",
+  none: "hsl(var(--hue-green))",
+};
+
 export interface ShareItem {
   key: string;
   label: string;
   value: number;
   /** Готовая подпись суммы. */
   display: string;
+  /** Свой цвет — для статусных шкал, где оттенок закреплён за значением. */
+  color?: string;
 }
 
 const MAX_SLICES = 6;
@@ -45,10 +69,13 @@ const MAX_SLICES = 6;
 export function ShareDonut({
   items,
   emptyText = "Нет операций за период",
+  /** Подписи первой и третьей колонок: у страны это «сумма», у риска — «счетов». */
+  columns = ["Страна", "Сумма"],
   className,
 }: {
   items: ShareItem[];
   emptyText?: string;
+  columns?: [string, string];
   className?: string;
 }) {
   const reduce = useReducedMotion();
@@ -59,7 +86,7 @@ export function ShareDonut({
   const head = sorted.slice(0, MAX_SLICES);
   const tail = sorted.slice(MAX_SLICES);
   const slices: Array<ShareItem & { color: string }> = [
-    ...head.map((s, i) => ({ ...s, color: SHARE_COLORS[i] })),
+    ...head.map((s, i) => ({ ...s, color: s.color ?? SHARE_COLORS[i] })),
     ...(tail.length
       ? [
           {
@@ -89,7 +116,14 @@ export function ShareDonut({
   let offset = 25;
 
   return (
-    <div className={cn("grid gap-5 p-4 sm:p-5 lg:grid-cols-[220px_minmax(0,1fr)]", className)}>
+    <div
+      className={cn(
+        /* items-start, иначе при двух-трёх долях таблица растягивается по
+           высоте кольца и строки расползаются на полкарточки. */
+        "grid items-start gap-5 p-4 sm:p-5 lg:grid-cols-[220px_minmax(0,1fr)]",
+        className
+      )}
+    >
       <svg viewBox="0 0 42 42" className="mx-auto w-full max-w-[220px]" role="img" aria-label="Доли">
         <circle cx="21" cy="21" r={R} fill="transparent" stroke="hsl(var(--muted))" strokeWidth="6" />
         {slices.map((s) => {
@@ -124,9 +158,9 @@ export function ShareDonut({
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border text-overline uppercase text-muted-foreground">
-            <th className="pb-2 text-left font-semibold">Страна</th>
+            <th className="pb-2 text-left font-semibold">{columns[0]}</th>
             <th className="pb-2 pl-2 text-right font-semibold">Доля</th>
-            <th className="pb-2 pl-3 text-right font-semibold">Сумма</th>
+            <th className="pb-2 pl-3 text-right font-semibold">{columns[1]}</th>
           </tr>
         </thead>
         <tbody>

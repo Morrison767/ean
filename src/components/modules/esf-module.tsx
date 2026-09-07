@@ -5,8 +5,8 @@
  *
  * Сценарий взят из прежней версии без изменений: вход в модуль — это поиск, а
  * не реестр. Аналитик приходит сюда с конкретным контрагентом, и список всех
- * счетов-фактур страны ему на входе не нужен; общий реестр доступен ссылкой
- * «Открыть весь реестр контрагентов».
+ * счетов-фактур страны ему на входе не нужен; вся картина по стране вместе с
+ * полным реестром открывается отдельной карточкой под поиском.
  *
  * Выдача — карточки контрагентов, а не счетов-фактур: единица работы здесь
  * организация, внутрь которой потом проваливаются.
@@ -15,16 +15,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
-import { Building2, ChevronRight, Search, Star } from "lucide-react";
+import { Building2, ChevronRight, Globe2, Search, Star } from "lucide-react";
 
 import { Screen } from "@/components/app/screen";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
+import { CountryEntry } from "@/components/modules/country/entry";
 import { Stagger } from "@/components/ui/stagger";
 import { SegmentedControl } from "@/components/ui/tabs";
-import { money } from "@/lib/format";
+import { money, num } from "@/lib/format";
 import { motionTokens } from "@/lib/motion";
 import { companyCase } from "@/lib/utils";
 import { useApp } from "@/store/use-app";
@@ -55,6 +56,13 @@ export interface Counterparty {
   products: string[];
 }
 
+/*
+  Тот же признак ИП, что в прежней версии.
+  Через \b здесь нельзя: границу слова JS определяет по [A-Za-z0-9_], и после
+  кириллической «П» её нет — «ИП Топливо-Сервис» не совпадёт.
+*/
+const IS_IP = /^\s*ИП[\s«".]/i;
+
 const RISK_ORDER: RiskLevel[] = ["none", "medium", "high"];
 
 /** Свод контрагентов по всем счетам-фактурам. */
@@ -67,7 +75,7 @@ export function buildCounterparties(invoices: Invoice[]): Counterparty[] {
       cp = {
         bin,
         name,
-        kind: /^\s*ИП\b/i.test(name) ? "ip" : "legal",
+        kind: IS_IP.test(name) ? "ip" : "legal",
         asSupplier: 0,
         asCustomer: 0,
         total: 0,
@@ -126,6 +134,9 @@ export function EsfModule() {
   }, [query]);
 
   const all = useMemo(() => buildCounterparties(invoices), [invoices]);
+  /* Оборот — сумма счетов-фактур, а не сумма итогов контрагентов: там каждая
+     сделка учтена дважды, у поставщика и у покупателя. */
+  const turnover = useMemo(() => invoices.reduce((s, i) => s + i.amount, 0), [invoices]);
 
   const found = useMemo(() => {
     if (showAll) return all;
@@ -211,13 +222,17 @@ export function EsfModule() {
             </div>
           </div>
 
-          <Button
-            variant="ghost"
-            iconRight={ChevronRight}
-            onClick={() => router.push("/esf?all=1")}
-          >
-            Открыть весь реестр контрагентов
-          </Button>
+          <CountryEntry
+            href="/esf/overview"
+            icon={Globe2}
+            title="Открыть картину по стране"
+            description="Сводка по всему обороту ЭСФ: динамика, крупнейшие поставщики и покупатели, товары, отклонения цен — и полный реестр контрагентов и счетов-фактур с фильтрами."
+            stats={[
+              { value: num(invoices.length), label: "счетов-фактур" },
+              { value: money(turnover), label: "оборот" },
+              { value: num(all.length), label: "контрагентов" },
+            ]}
+          />
         </motion.div>
       </Screen>
     );
@@ -273,7 +288,7 @@ export function EsfModule() {
         <EmptyState
           icon={Search}
           title="Контрагенты не найдены"
-          description="Попробуйте изменить запрос или открыть весь реестр контрагентов."
+          description="Попробуйте изменить запрос или открыть сводку по стране."
         />
       ) : (
         <Stagger>

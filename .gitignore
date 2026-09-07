@@ -20,4 +20,5 @@ next-env.d.ts
 *.tsbuildinfo
 /.publish-build/.loop.log
 /out-pages
+/.next-build
 /.reference

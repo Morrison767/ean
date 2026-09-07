@@ -12,9 +12,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, History, Search, Star } from "lucide-react";
+import { ArrowRight, Globe2, History, Search, Star } from "lucide-react";
 
 import { Screen } from "@/components/app/screen";
+import { CountryEntry } from "@/components/modules/country/entry";
 import { SubjectCard } from "@/components/app/subject-card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -22,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Stagger } from "@/components/ui/stagger";
 import { SegmentedControl } from "@/components/ui/tabs";
 import { motionTokens } from "@/lib/motion";
-import { counted } from "@/lib/format";
+import { counted, num } from "@/lib/format";
 import { allSubjects, matchSubject, useApp } from "@/store/use-app";
 
 /** Подсказки на посадочном экране — как в прежней версии. */
@@ -60,9 +61,15 @@ export function SearchModule() {
     log({ action: "search", subject: query, subjectType: "query", ip: "10.0.1.12", status: "success" });
   }, [query, rememberSearch, log]);
 
+  const subjects = useMemo(() => allSubjects(db), [db]);
+  const risky = useMemo(
+    () => subjects.filter((s) => s.riskLevel !== "none").length,
+    [subjects]
+  );
+
   const found = useMemo(
-    () => (query ? allSubjects(db).filter((s) => matchSubject(s, query)) : []),
-    [db, query]
+    () => (query ? subjects.filter((s) => matchSubject(s, query)) : []),
+    [subjects, query]
   );
 
   const counts = {
@@ -139,6 +146,18 @@ export function SearchModule() {
               ))}
             </div>
           </div>
+
+          <CountryEntry
+            href="/search/overview"
+            icon={Globe2}
+            title="Открыть картину по стране"
+            description="Вся база досье сразу: распределение по уровню риска, самые частые признаки, связи между субъектами, активы под обременением — и полный реестр субъектов с фильтрами."
+            stats={[
+              { value: num(subjects.length), label: "субъектов" },
+              { value: num(risky), label: "с признаками риска" },
+              { value: num(db.companies.length), label: "юридических лиц" },
+            ]}
+          />
 
           {recent.length > 0 && (
             <div className="flex w-full max-w-[620px] flex-col gap-2 text-left">
