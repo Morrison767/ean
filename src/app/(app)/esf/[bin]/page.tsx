@@ -6,6 +6,8 @@
  * лежат в localStorage.
  */
 
+import { Suspense } from "react";
+
 import { EsfCounterpartyPage } from "@/components/modules/esf-counterparty-route";
 import invoices from "@/data/seed/invoices.json";
 
@@ -20,5 +22,9 @@ export function generateStaticParams() {
 }
 
 export default function Page() {
-  return <EsfCounterpartyPage />;
+  return (
+    <Suspense>
+      <EsfCounterpartyPage />
+    </Suspense>
+  );
 }

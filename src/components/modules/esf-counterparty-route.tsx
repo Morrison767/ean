@@ -1,12 +1,20 @@
 "use client";
 
-/** Экран профиля контрагента ЭСФ: подбирает данные и отдаёт их в EsfProfile. */
+/**
+ * Экран контрагента в ЭСФ.
+ *
+ * Один маршрут — три состояния, как в прежней версии: профиль, провал по ТРУ
+ * и провал по партнёру. Провалы живут в адресе (?product= / ?partner=), а не
+ * во внутреннем состоянии: так работает кнопка «назад» браузера и ссылку на
+ * разбор конкретной позиции можно переслать.
+ */
 
 import { useMemo } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Building2 } from "lucide-react";
 
 import { Screen } from "@/components/app/screen";
+import { EsfDrilldown } from "@/components/modules/esf-drilldown";
 import { buildCounterparties } from "@/components/modules/esf-module";
 import { EsfProfile } from "@/components/modules/esf-profile";
 import { Button } from "@/components/ui/button";
@@ -16,8 +24,14 @@ import { useApp } from "@/store/use-app";
 
 export function EsfCounterpartyPage() {
   const params = useParams<{ bin: string }>();
+  const search = useSearchParams();
+  const router = useRouter();
+
   const hydrated = useApp((s) => s.hydrated);
   const db = useApp((s) => s.db);
+
+  const product = search.get("product") ?? undefined;
+  const partner = search.get("partner") ?? undefined;
 
   const cp = useMemo(
     () => buildCounterparties(db.invoices).find((c) => c.bin === params.bin),
@@ -55,6 +69,18 @@ export function EsfCounterpartyPage() {
           }
         />
       </Screen>
+    );
+  }
+
+  if (product || partner) {
+    return (
+      <EsfDrilldown
+        bin={cp.bin}
+        product={product}
+        partnerBin={partner}
+        invoices={invoices}
+        onBack={() => router.push(`/esf/${cp.bin}`)}
+      />
     );
   }
 

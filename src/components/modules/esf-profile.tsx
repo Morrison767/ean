@@ -310,10 +310,13 @@ function TopTable({
   title,
   items,
   field,
+  onRow,
 }: {
   title: string;
   items: Invoice[];
   field: "customer" | "supplier" | "product";
+  /** Переход по строке — во вкладке ТРУ ведёт в разбор позиции. */
+  onRow?: (name: string) => void;
 }) {
   const rows = useMemo(() => {
     const map = new Map<string, number>();
@@ -339,7 +342,11 @@ function TopTable({
               <TableEmpty colSpan={3}>Данных за период нет</TableEmpty>
             ) : (
               rows.map((r) => (
-                <TableRow key={r.name}>
+                <TableRow
+                  key={r.name}
+                  interactive={!!onRow}
+                  onClick={onRow ? () => onRow(r.name) : undefined}
+                >
                   <TableCell className="font-medium">
                     {field === "product" ? r.name : companyCase(r.name)}
                   </TableCell>
@@ -360,6 +367,7 @@ function TopTable({
 /* ------------------------------- прочие вкладки ------------------------------- */
 
 function CounterpartiesTab({ cp, scoped }: { cp: Counterparty; scoped: Invoice[] }) {
+  const router = useRouter();
   const rows = useMemo(() => {
     const map = new Map<string, { name: string; bin: string; sales: number; buys: number; n: number }>();
     for (const i of scoped) {
@@ -395,7 +403,11 @@ function CounterpartiesTab({ cp, scoped }: { cp: Counterparty; scoped: Invoice[]
                 <TableEmpty colSpan={5}>Контрагентов за период нет</TableEmpty>
               ) : (
                 rows.map((r) => (
-                  <TableRow key={r.bin}>
+                  <TableRow
+                    key={r.bin}
+                    interactive
+                    onClick={() => router.push(`/esf/${cp.bin}?partner=${r.bin}`)}
+                  >
                     <TableCell className="font-medium">{companyCase(r.name)}</TableCell>
                     <TableCell className="tabular-nums">{r.bin}</TableCell>
                     <TableCell numeric>{r.sales ? moneyFull(r.sales) : "—"}</TableCell>
@@ -495,6 +507,7 @@ function OperationsTab({ cp, scoped }: { cp: Counterparty; scoped: Invoice[] }) 
 }
 
 function ProductsTab({
+  cp,
   sales,
   purchases,
 }: {
@@ -502,10 +515,14 @@ function ProductsTab({
   sales: Invoice[];
   purchases: Invoice[];
 }) {
+  const router = useRouter();
+  const open = (product: string) =>
+    router.push(`/esf/${cp.bin}?product=${encodeURIComponent(product)}`);
+
   return (
     <Stagger>
-      <TopTable title="Реализованные ТРУ" items={sales} field="product" />
-      <TopTable title="Приобретённые ТРУ" items={purchases} field="product" />
+      <TopTable title="Реализованные ТРУ" items={sales} field="product" onRow={open} />
+      <TopTable title="Приобретённые ТРУ" items={purchases} field="product" onRow={open} />
     </Stagger>
   );
 }
