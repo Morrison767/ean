@@ -12,7 +12,7 @@
  * с реестрами, а не хранит их копию.
  */
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
@@ -40,6 +40,11 @@ import { OpenInModule } from "@/components/dossier/person-dossier";
 import { Checklist } from "@/components/dossier/checklist";
 import { DataList, Field } from "@/components/dossier/data-list";
 import { ScoreMeter } from "@/components/dossier/score-meter";
+import {
+  SourceDialog,
+  sourceForCompany,
+  type SourceRecord,
+} from "@/components/dossier/source-dialog";
 import { CompanyLink, PersonLink } from "@/components/dossier/subject-link";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -97,6 +102,7 @@ export function CompanyDossier({
   const params = useSearchParams();
   const reduce = useReducedMotion();
   const report = useReportProgress();
+  const [source, setSource] = useState<SourceRecord | null>(null);
 
   const tab = params.get("tab") ?? "trust";
   const setTab = (id: string) =>
@@ -121,6 +127,7 @@ export function CompanyDossier({
   return (
     <Screen className="max-w-[1500px]">
       <ReportProgress phase={report.phase} label="Формируется досье…" />
+      <SourceDialog record={source} onClose={() => setSource(null)} />
       <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="flex flex-col gap-4 lg:sticky lg:top-0 lg:self-start">
           <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
@@ -203,6 +210,8 @@ export function CompanyDossier({
                   sections={checklist}
                   flags={company.reliabilityFlags ?? []}
                   checks={company.reliabilityChecks ?? []}
+                  hasSource={() => true}
+                  onOpenSource={(item) => setSource(sourceForCompany(company, item))}
                 />
               )}
               {tab === "basic" && <GeneralTab company={company} />}

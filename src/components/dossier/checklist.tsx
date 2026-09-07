@@ -31,6 +31,7 @@ export function Checklist({
   sections,
   flags,
   checks,
+  hasSource,
   onOpenSource,
 }: {
   sections: ChecklistSection[];
@@ -38,8 +39,10 @@ export function Checklist({
   flags: string[];
   /** Пункты, требующие проверки. */
   checks: string[];
-  /** Открыть запись источника. Возвращает false, если её нет для пункта. */
-  onOpenSource?: (item: string) => boolean;
+  /** Есть ли у пункта запись источника. Без неё строка не кликабельна. */
+  hasSource?: (item: string) => boolean;
+  /** Открыть запись источника. */
+  onOpenSource?: (item: string) => void;
 }) {
   const verdictOf = (item: string): Verdict =>
     flags.includes(item) ? "hit" : checks.includes(item) ? "attention" : "clean";
@@ -74,14 +77,19 @@ export function Checklist({
               <ul className="flex flex-col">
                 {section.items.map((item) => {
                   const v = verdictOf(item);
-                  /* У срабатывания может быть запись источника — тогда строка
-                     кликабельна: флаг без доказательства проверять негде. */
-                  const hasSource = v !== "clean" && !!onOpenSource;
-                  const Row = hasSource ? "button" : "div";
+                  /*
+                    Кликабельна только та строка, за которой действительно
+                    есть запись источника. Иначе курсор и шеврон обещают
+                    переход, которого нет, — а это хуже, чем неподвижная
+                    строка.
+                  */
+                  const clickable =
+                    v !== "clean" && !!onOpenSource && (hasSource?.(item) ?? false);
+                  const Row = clickable ? "button" : "div";
                   return (
                     <li key={item} className="border-b border-border last:border-0">
                       <Row
-                        {...(hasSource
+                        {...(clickable
                           ? {
                               type: "button" as const,
                               onClick: () => onOpenSource?.(item),
@@ -90,7 +98,7 @@ export function Checklist({
                           : {})}
                         className={cn(
                           "flex w-full items-center justify-between gap-3 px-4 py-2 text-left sm:px-5",
-                          hasSource && "transition-colors hover:bg-surface"
+                          clickable && "cursor-pointer transition-colors hover:bg-surface"
                         )}
                       >
                       <span className="flex min-w-0 items-center gap-2">
@@ -109,7 +117,7 @@ export function Checklist({
                           <span className={cn("text-xs", VERDICT[v].className)}>
                             {VERDICT[v].label}
                           </span>
-                          {hasSource && (
+                          {clickable && (
                             <ChevronRight
                               className={cn(
                                 "h-3.5 w-3.5",

@@ -43,7 +43,11 @@ import { DataList, Field } from "@/components/dossier/data-list";
 import { DocumentsTabs } from "@/components/dossier/documents-tabs";
 import { RelationsGraph } from "@/components/charts/relations-graph";
 import { ScoreMeter } from "@/components/dossier/score-meter";
-import { SourceDialog, sourceFor, type SourceRecord } from "@/components/dossier/source-dialog";
+import {
+  SourceDialog,
+  sourceForPerson,
+  type SourceRecord,
+} from "@/components/dossier/source-dialog";
 import { CompanyLink, PersonLink } from "@/components/dossier/subject-link";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -206,11 +210,10 @@ export function PersonDossier({
                   checks={(person.trustChecks ?? []).filter(
                     (c): c is string => typeof c === "string"
                   )}
-                  onOpenSource={(item) => {
-                    const record = sourceFor(person, item);
-                    if (record) setSource(record);
-                    return !!record;
-                  }}
+                  /* Запись источника есть у любого срабатывания: базовая
+                     часть берётся из справочника реестров. */
+                  hasSource={() => true}
+                  onOpenSource={(item) => setSource(sourceForPerson(person, item))}
                 />
               )}
               {tab === "personal" && <PersonalTab person={person} />}
