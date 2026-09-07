@@ -30,7 +30,10 @@ import {
 } from "lucide-react";
 
 import { Screen } from "@/components/app/screen";
+import dynamic from "next/dynamic";
+
 import { ShareDonut } from "@/components/charts/share-donut";
+import type { MapPoint } from "@/components/charts/trade-map";
 import { SchemeChain } from "@/components/charts/scheme-chain";
 import { Trend } from "@/components/charts/trend";
 import { Badge, RiskBadge } from "@/components/ui/badge";
@@ -67,6 +70,12 @@ const TABS = [
 /** Ставки таможенных платежей — те же, что были подписаны в прежней версии. */
 const DUTY_RATE = 0.07;
 const VAT_RATE = 0.12;
+
+/* Leaflet трогает window при загрузке — только на клиенте. */
+const TradeMap = dynamic(
+  () => import("@/components/charts/trade-map").then((m) => m.TradeMap),
+  { ssr: false, loading: () => <div className="m-4 h-[440px] animate-pulse rounded-12 bg-muted" /> }
+);
 
 const yearOf = (d: string) => d.slice(-4);
 const monthOf = (d: string) => d.slice(3, 5);
@@ -504,8 +513,35 @@ function GeographyTab({
       s.edges?.some((e) => e.flag === "markup" || e.flag === "break")
   );
 
+  /* Точки карты: страна один раз, направление — по тому, что через неё шло. */
+  const points: MapPoint[] = (() => {
+    const map = new Map<string, MapPoint>();
+    for (const d of scoped) {
+      const prev = map.get(d.countryCode);
+      if (!prev) {
+        map.set(d.countryCode, {
+          code: d.countryCode,
+          total: d.valueUsd,
+          operations: 1,
+          risk: d.risk,
+          kind: d.type,
+        });
+        continue;
+      }
+      prev.total += d.valueUsd;
+      prev.operations += 1;
+      if (d.risk === "high" || (d.risk === "medium" && prev.risk === "none")) prev.risk = d.risk;
+      if (prev.kind !== d.type) prev.kind = "both";
+    }
+    return [...map.values()];
+  })();
+
   return (
     <Stagger>
+      <SectionCard icon={MapIcon} title="Карта внешней торговли" collapsible={false}>
+        <TradeMap points={points} />
+      </SectionCard>
+
       <div className="grid gap-4 lg:grid-cols-2">
         <SectionCard icon={ArrowDownToLine} title="Импорт по странам" collapsible={false}>
           <ShareDonut items={mk("import")} />
