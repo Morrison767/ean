@@ -59,7 +59,9 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          # При output: "export" вместе с distDir готовый сайт лежит в
+          # out-pages, а каталог out не создаётся вовсе.
+          path: out-pages
 
   deploy:
     needs: build
