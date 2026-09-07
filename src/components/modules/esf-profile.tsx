@@ -27,6 +27,7 @@ import {
 import { Screen } from "@/components/app/screen";
 import { GroupedBars, SERIES_COLORS } from "@/components/charts/grouped-bars";
 import { SchemeChain } from "@/components/charts/scheme-chain";
+import { InvoiceDialog } from "@/components/modules/invoice-dialog";
 import { Badge, RiskBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionCard } from "@/components/ui/section-card";
@@ -408,8 +409,20 @@ function CounterpartiesTab({ cp, scoped }: { cp: Counterparty; scoped: Invoice[]
 }
 
 function OperationsTab({ cp, scoped }: { cp: Counterparty; scoped: Invoice[] }) {
+  const router = useRouter();
+  /* Строка открывает карточку документа — как в прежней версии. */
+  const [opened, setOpened] = useState<Invoice | null>(null);
+
   return (
     <Stagger>
+      <InvoiceDialog
+        invoice={opened}
+        onClose={() => setOpened(null)}
+        onCounterparty={(bin) => {
+          setOpened(null);
+          router.push(`/esf/${bin}`);
+        }}
+      />
       <SectionCard
         icon={FileSpreadsheet}
         title="Список ЭСФ"
@@ -440,7 +453,7 @@ function OperationsTab({ cp, scoped }: { cp: Counterparty; scoped: Invoice[] }) 
                   const delta =
                     i.avgPrice && i.avgPrice > 0 ? ((i.price - i.avgPrice) / i.avgPrice) * 100 : null;
                   return (
-                    <TableRow key={i.id}>
+                    <TableRow key={i.id} interactive onClick={() => setOpened(i)}>
                       <TableCell className="whitespace-nowrap tabular-nums font-medium">{i.id}</TableCell>
                       <TableCell className="whitespace-nowrap tabular-nums">{i.date}</TableCell>
                       <TableCell>
