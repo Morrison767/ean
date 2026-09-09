@@ -81,7 +81,12 @@ function buildRows(people: Person[], companies: Company[]): SubjectRow[] {
       href: `/person/${p.id}`,
       name: p.fullName,
       code: p.iin,
-      role: p.currentJob?.position ?? p.jobs?.[0]?.position ?? "—",
+      /* Действующий договор точнее, чем currentJob: тот в фикстурах местами
+         расходится с историей занятости. */
+      role:
+        p.employment?.find((e) => !e.end)?.position ??
+        p.currentJob?.position ??
+        "—",
       risk: p.riskLevel,
       score: p.score,
       tags: (p.riskTags ?? []).filter((t) => String(t) !== "none"),

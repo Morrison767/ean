@@ -35,6 +35,40 @@ export interface Job {
   schedule?: string;
 }
 
+/**
+ * Запись о трудовой деятельности.
+ *
+ * Форма повторяет карточку трудового договора в ЕСУТД (Единая система учёта
+ * трудовых договоров, enbek.kz): работодатель, должность с кодом НКЗ, номер
+ * договора, сроки, вид и режим, основание прекращения. Самозанятость приходит
+ * не оттуда, а из госреестра ИП, — поэтому у записи есть `source`: смешивать
+ * два реестра в одном списке можно, выдавать один за другой нельзя.
+ */
+export interface Employment {
+  company: string;
+  /** БИН работодателя. Если он есть в базе, из записи открывается досье. */
+  bin?: string;
+  position: string;
+  /** Код должности по Национальному классификатору занятий РК. */
+  nkz?: string;
+  /** Номер трудового договора в ЕСУТД. */
+  contract?: string;
+  start: string;
+  /** Пусто — договор действует на дату выгрузки. */
+  end?: string;
+  /** Бессрочный, срочный, ГПХ, индивидуальное предпринимательство. */
+  contractType?: string;
+  /** Режим работы: полная занятость, 0,5 ставки, вахтовый. */
+  schedule?: string;
+  region?: string;
+  /** Вид деятельности работодателя с кодом ОКЭД. */
+  activity?: string;
+  /** Основание прекращения со ссылкой на статью ТК РК. */
+  dismissal?: string;
+  /** Реестр, из которого пришла запись. */
+  source?: string;
+}
+
 export interface Relative {
   relation: string;
   fullName: string;
@@ -118,7 +152,10 @@ export interface Person {
   rka?: string;
   experience?: string;
   currentJob?: Job;
+  /** @deprecated Краткий список из прежней сборки; полная история — в `employment`. */
   jobs?: Job[];
+  /** История трудовой деятельности: ЕСУТД (enbek.kz) и госреестр ИП. */
+  employment?: Employment[];
   relatives?: Relative[];
   education?: Array<Record<string, string>>;
   documents?: Array<Record<string, string>>;

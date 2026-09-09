@@ -47,5 +47,6 @@ export const SOURCES: Array<{ name: string; ago: string; tone: BadgeProps["tone"
   { name: "Судебный кабинет", ago: "12 ч", tone: "warning" },
   { name: "Банк. транзакции (НБ)", ago: "1 д", tone: "warning" },
   { name: "ЕНС (налог. задолж.)", ago: "2 ч", tone: "success" },
+  { name: "Enbek.kz (ЕСУТД)", ago: "4 ч", tone: "success" },
   { name: "Telegram ID база", ago: "30 мин", tone: "success" },
 ];

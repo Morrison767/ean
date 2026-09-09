@@ -41,6 +41,7 @@ import { Screen } from "@/components/app/screen";
 import { Checklist } from "@/components/dossier/checklist";
 import { DataList, Field } from "@/components/dossier/data-list";
 import { DocumentsTabs } from "@/components/dossier/documents-tabs";
+import { EmploymentTab } from "@/components/dossier/employment";
 import { RelationsGraph } from "@/components/charts/relations-graph";
 import { ScoreMeter } from "@/components/dossier/score-meter";
 import {
@@ -76,6 +77,7 @@ import {
 } from "@/components/ui/table";
 import { RISK_TAG_LABEL } from "@/config/dashboard";
 import { money, moneyFull, num, percent } from "@/lib/format";
+import { humanMonths, summarize } from "@/lib/employment";
 import { motionTokens } from "@/lib/motion";
 import { cn, companyCase } from "@/lib/utils";
 import { useApp } from "@/store/use-app";
@@ -84,6 +86,7 @@ import type { ChecklistSection, Person, RiskLevel } from "@/data/types";
 const TABS = [
   { id: "trust", label: "Благонадёжность", icon: ShieldCheck },
   { id: "personal", label: "Личные данные", icon: User },
+  { id: "employment", label: "Трудовая деятельность", icon: Briefcase },
   { id: "assets", label: "Бизнес и активы", icon: Wallet },
   { id: "procurement", label: "Госзакупки", icon: ShoppingCart },
   { id: "finance", label: "Финмониторинг", icon: Landmark },
@@ -217,6 +220,7 @@ export function PersonDossier({
                 />
               )}
               {tab === "personal" && <PersonalTab person={person} />}
+              {tab === "employment" && <EmploymentTab person={person} />}
               {tab === "assets" && <AssetsTab person={person} />}
               {tab === "procurement" && <ProcurementTab person={person} />}
               {tab === "finance" && <FinanceTab person={person} />}
@@ -248,6 +252,16 @@ function Contact({
 /* ------------------------------- Личные данные ------------------------------- */
 
 function PersonalTab({ person }: { person: Person }) {
+  /*
+    Стаж считаем по записям ЕСУТД, а не берём готовой строкой: два числа об
+    одном и том же расходятся, стоит подправить одну из сторон. Строка из
+    прежней сборки остаётся запасным вариантом, если записей нет.
+  */
+  const summary = summarize(person.employment);
+  const experience = summary.totalMonths
+    ? humanMonths(summary.totalMonths)
+    : person.experience;
+
   return (
     <Stagger>
       <SectionCard icon={User} title="Основные сведения" collapsible={false}>
@@ -256,7 +270,7 @@ function PersonalTab({ person }: { person: Person }) {
           <Field label="Национальность" value={person.nationality} />
           <Field label="РКА" value={person.rka} mono />
           <Field label="Дата регистрации" value={person.regDate} />
-          <Field label="Стаж" value={person.experience} />
+          <Field label="Стаж" value={experience} />
           <Field
                 label="Супруг(а)"
                 value={<PersonLink name={person.spouseName} iin={undefined} />}

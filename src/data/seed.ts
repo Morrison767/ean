@@ -13,6 +13,7 @@
 import audit from "./seed/audit.json";
 import companies from "./seed/companies.json";
 import declarations from "./seed/declarations.json";
+import employment from "./seed/employment.json";
 import graphA from "./seed/graph-a.json";
 import graphB from "./seed/graph-b.json";
 import graphC from "./seed/graph-c.json";
@@ -30,6 +31,7 @@ import type {
   ChecklistSection,
   Company,
   Declaration,
+  Employment,
   Invoice,
   Person,
   Procurement,
@@ -38,7 +40,7 @@ import type {
   Transaction,
 } from "./types";
 
-export const SEED_VERSION = 2;
+export const SEED_VERSION = 3;
 
 /**
  * JSON приходит с широкими типами (string вместо литеральных объединений),
@@ -63,9 +65,18 @@ export interface Database {
   };
 }
 
+/**
+ * Трудовые биографии лежат отдельным файлом, а не в people.json.
+ *
+ * people.json собирает скрипт извлечения из прежней сборки; всё дописанное
+ * туда руками пропадёт при следующем прогоне. Поэтому новые сведения живут
+ * рядом и приклеиваются здесь по идентификатору субъекта.
+ */
+const EMPLOYMENT = employment as Record<string, Employment[]>;
+
 export function createSeed(): Database {
   return {
-    people: as<Person[]>(people),
+    people: as<Person[]>(people).map((p) => ({ ...p, employment: EMPLOYMENT[p.id] })),
     companies: as<Company[]>(companies),
     declarations: as<Declaration[]>(declarations),
     invoices: as<Invoice[]>(invoices),

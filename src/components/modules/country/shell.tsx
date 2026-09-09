@@ -12,6 +12,7 @@
 import type { LucideIcon } from "lucide-react";
 
 import { Counter } from "@/components/ui/counter";
+import { Insight } from "@/components/ui/insight";
 import { cn } from "@/lib/utils";
 
 /** Крупный показатель шапки сводки. */
@@ -49,48 +50,6 @@ export function HeroStat({
 }
 
 /**
- * Вывод из данных, а не показатель.
- *
- * Формулировка обязана быть проверяемой: «на топ-3 приходится 78 % оборота»
- * читается и перепроверяется, «высокая концентрация» — нет.
- */
-export function Insight({
-  title,
-  value,
-  detail,
-  tone = "neutral",
-  icon: Icon,
-}: {
-  title: string;
-  value: string;
-  detail: string;
-  tone?: "neutral" | "warning" | "danger";
-  icon: LucideIcon;
-}) {
-  const box = {
-    neutral: "border-border bg-surface",
-    warning: "border-warning/25 bg-warning-subtle",
-    danger: "border-danger/25 bg-danger-subtle",
-  }[tone];
-  const mark = {
-    neutral: "text-icon",
-    warning: "text-icon-warning",
-    danger: "text-icon-danger",
-  }[tone];
-
-  return (
-    <div className={cn("flex gap-3 rounded-12 border p-3.5", box)}>
-      <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", mark)} strokeWidth={1.8} />
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="text-xs text-muted-foreground">{title}</span>
-        <span className="text-base font-bold tabular-nums text-foreground">{value}</span>
-        <span className="text-xs text-muted-foreground">{detail}</span>
-      </div>
-    </div>
-  );
-}
-
-/**
  * Доля топ-N в общей сумме — самая говорящая величина в реестре: она сразу
  * показывает, распределён рынок или держится на нескольких участниках.
  */
@@ -100,3 +59,6 @@ export function concentration(values: number[], top = 3): { share: number; total
   const head = [...values].sort((a, b) => b - a).slice(0, top).reduce((s, v) => s + v, 0);
   return { share: (head / total) * 100, total };
 }
+
+/* Карточка вывода переехала в ui: её показывают и страновые сводки, и досье. */
+export { Insight };
