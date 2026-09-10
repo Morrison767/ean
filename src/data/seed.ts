@@ -40,7 +40,7 @@ import type {
   Transaction,
 } from "./types";
 
-export const SEED_VERSION = 4;
+export const SEED_VERSION = 5;
 
 /**
  * JSON приходит с широкими типами (string вместо литеральных объединений),

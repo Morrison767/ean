@@ -13,22 +13,22 @@
  * и у каждой записи подписано, откуда она.
  */
 
+import Link from "next/link";
 import {
-  AlertTriangle,
+  ArrowUpRight,
   Briefcase,
-  Building2,
   CalendarClock,
   Database,
   FileText,
   Landmark,
-  Layers,
+  ShieldAlert,
+  ShieldCheck,
   TimerReset,
 } from "lucide-react";
 
 import { CompanyLink } from "@/components/dossier/subject-link";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Insight } from "@/components/ui/insight";
 import { KpiTile } from "@/components/ui/kpi-tile";
 import { SectionCard } from "@/components/ui/section-card";
 import { Stagger } from "@/components/ui/stagger";
@@ -40,18 +40,16 @@ import {
   humanMonths,
   summarize,
 } from "@/lib/employment";
+import { employmentRisks, recordKey, type EmploymentRisk } from "@/lib/employment-risks";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/store/use-app";
 import type { Employment, Person } from "@/data/types";
 
-/** «ТОО «EIDE Software Solutions»» → «EIDE Software Solutions»: в плитке нужен
-    сам работодатель, а организационная форма только съедает строку. */
-const shortName = (name: string) =>
-  name.replace(/^(ТОО|АО|ИП|ГУ|АОО)\s+/u, "").replace(/[«»"]/g, "");
-
 export function EmploymentTab({ person }: { person: Person }) {
-  const companies = useApp((s) => s.db.companies);
+  const db = useApp((s) => s.db);
   const summary = summarize(person.employment);
+  const risks = employmentRisks(person, db);
+  const flagged = new Set(risks.flatMap((r) => r.records));
 
   if (summary.records.length === 0) {
     return (
@@ -63,83 +61,42 @@ export function EmploymentTab({ person }: { person: Person }) {
     );
   }
 
-  /* Работодатель, который сам есть в базе с признаками риска, — это не просто
-     строка биографии, а пересечение субъекта с проверяемой организацией. */
-  const riskyEmployers = summary.records
-    .map((r) => companies.find((c) => (r.bin && c.bin === r.bin) || c.name === r.company))
-    .filter((c): c is NonNullable<typeof c> => !!c && c.riskLevel !== "none");
-  const uniqueRisky = [...new Map(riskyEmployers.map((c) => [c.bin, c])).values()];
-
-  /*
-    В ленте отмечаем любой разрыв: это факт, и он должен быть виден. А в выводы
-    выносим только заметный — два месяца между работами это обычное дело, и
-    карточка о нём приучает пропускать такие карточки вообще.
-  */
-  const longestGap = [...summary.gaps]
-    .filter((g) => g.months >= 3)
-    .sort((a, b) => b.months - a.months)[0];
-
   return (
     <Stagger>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiTile label="Общий стаж" value={humanMonths(summary.totalMonths)} icon={TimerReset} />
-        <KpiTile label="Работодателей" value={String(summary.employers)} icon={Building2} />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <KpiTile
+          label="Признаков риска"
+          value={String(risks.length)}
+          icon={ShieldAlert}
+          tone={risks.some((r) => r.severity === "high") ? "danger" : risks.length ? "warning" : "brand"}
+        />
         <KpiTile
           label="Действующих договоров"
           value={String(summary.active.length)}
           icon={FileText}
           tone={summary.active.length > 1 ? "warning" : "brand"}
         />
-        {/* Не «дольше всего N лет»: у того, кто всю карьеру на одном месте, это
-            число совпадало бы с общим стажем, и плитка не сообщала бы ничего. */}
-        <KpiTile
-          label="Основной работодатель"
-          value={summary.longest ? shortName(summary.longest.company) : "—"}
-          icon={Briefcase}
-        />
+        <KpiTile label="Общий стаж" value={humanMonths(summary.totalMonths)} icon={TimerReset} />
       </div>
 
-      {(summary.idle || summary.concurrent || longestGap || uniqueRisky.length > 0) && (
-        <div className="grid gap-3 lg:grid-cols-3">
-          {summary.idle && (
-            <Insight
-              icon={CalendarClock}
-              tone={summary.idle.months >= 6 ? "danger" : "warning"}
-              title="Сейчас нигде не трудоустроен"
-              value={humanMonths(summary.idle.months)}
-              detail={`последний договор прекращён ${formatDate(summary.idle.since)}`}
-            />
-          )}
-          {summary.concurrent && (
-            <Insight
-              icon={Layers}
-              tone="warning"
-              title="Работал в нескольких местах сразу"
-              value={counted(summary.concurrent.count, "договор", "договора", "договоров")}
-              detail={`одновременно на ${formatDate(summary.concurrent.on)}: ${summary.concurrent.records
-                .map((r) => r.company)
-                .join(", ")}`}
-            />
-          )}
-          {longestGap && (
-            <Insight
-              icon={CalendarClock}
-              tone={longestGap.months >= 12 ? "warning" : "neutral"}
-              title="Наибольший перерыв"
-              value={humanMonths(longestGap.months)}
-              detail={`с ${formatDate(longestGap.from)} по ${formatDate(longestGap.to)} записей нет`}
-            />
-          )}
-          {uniqueRisky.length > 0 && (
-            <Insight
-              icon={AlertTriangle}
-              tone="danger"
-              title="Работодатели с признаками риска"
-              value={String(uniqueRisky.length)}
-              detail={uniqueRisky.map((c) => c.name).join(", ")}
-            />
-          )}
-        </div>
+      {risks.length > 0 ? (
+        <SectionCard
+          icon={ShieldAlert}
+          title="Риски по трудовой биографии"
+          subtitle="Связки с закупками, госорганами и реестром юрлиц"
+          collapsible={false}
+        >
+          <ul className="flex flex-col">
+            {risks.map((risk) => (
+              <Finding key={risk.id} risk={risk} />
+            ))}
+          </ul>
+        </SectionCard>
+      ) : (
+        <p className="flex items-center gap-2 rounded-12 border border-border bg-surface px-3.5 py-3 text-sm text-muted-foreground">
+          <ShieldCheck className="h-4 w-4 shrink-0 text-icon-success" />
+          Связок с закупками, госорганами и проблемными юрлицами по трудовой биографии не найдено.
+        </p>
       )}
 
       <SectionCard
@@ -153,8 +110,9 @@ export function EmploymentTab({ person }: { person: Person }) {
         <ol className="flex flex-col px-4 py-2 sm:px-5">
           {summary.records.map((record, i) => (
             <Row
-              key={`${record.contract ?? record.company}-${record.start}`}
+              key={recordKey(record)}
               record={record}
+              flagged={flagged.has(recordKey(record))}
               /* Разрыв стоит перед записью, если он упирается в её начало. */
               gap={summary.gaps.find((g) => formatDate(g.to) === record.start)}
               last={i === summary.records.length - 1}
@@ -175,14 +133,60 @@ export function EmploymentTab({ person }: { person: Person }) {
   );
 }
 
+/**
+ * Находка.
+ *
+ * Заголовок называет нарушение, ниже — факты, из которых оно сложилось, и
+ * ссылка на реестр, где их можно сверить. Без фактов и ссылки это было бы
+ * обвинением без доказательства, а решение по субъекту принимает человек.
+ */
+function Finding({ risk }: { risk: EmploymentRisk }) {
+  const high = risk.severity === "high";
+  return (
+    <li className="flex gap-3 border-b border-border px-4 py-3.5 last:border-0 sm:px-5">
+      <ShieldAlert
+        className={cn("mt-0.5 h-4.5 w-4.5 shrink-0", high ? "text-icon-danger" : "text-icon-warning")}
+        strokeWidth={1.8}
+      />
+      <div className="flex min-w-0 flex-col gap-1.5">
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="text-sm font-semibold text-foreground">{risk.title}</span>
+          <Badge tone={high ? "danger" : "warning"} size="sm">
+            {high ? "Высокий риск" : "Средний риск"}
+          </Badge>
+        </span>
+        <ul className="flex flex-col gap-1">
+          {risk.evidence.map((e) => (
+            <li key={e} className="text-xs leading-relaxed text-muted-foreground">
+              {e}
+            </li>
+          ))}
+        </ul>
+        {risk.link && (
+          <Link
+            href={risk.link.href}
+            className="mt-0.5 inline-flex w-fit items-center gap-1 text-xs font-medium text-link transition-colors hover:text-link-hover"
+          >
+            {risk.link.label}
+            <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
+          </Link>
+        )}
+      </div>
+    </li>
+  );
+}
+
 function Row({
   record,
   gap,
   last,
+  flagged,
 }: {
   record: Employment;
   gap?: { months: number };
   last: boolean;
+  /** Запись попала хотя бы в одну находку — помечаем прямо в ленте. */
+  flagged: boolean;
 }) {
   const open = !record.end;
   const months = durationOf(record);
@@ -209,17 +213,27 @@ function Row({
         <span
           className={cn(
             "h-3 w-3 shrink-0 rounded-full border-2",
-            participation
-            ? "border-hue-violet bg-card"
-            : open
-              ? "border-success bg-success"
-              : "border-border-strong bg-card"
+            flagged
+            ? "border-danger bg-danger"
+            : participation
+              ? "border-hue-violet bg-card"
+              : open
+                ? "border-success bg-success"
+                : "border-border-strong bg-card"
           )}
         />
         {!last && <span className="mt-1 w-px flex-1 bg-border" />}
       </span>
 
-      <div className="min-w-0 flex-1 pb-5 pt-3">
+      {/* Запись, попавшая в находку, помечена и в ленте: иначе список рисков
+          сверху и хронология внизу живут порознь, и приходится сопоставлять
+          названия глазами. */}
+      <div
+        className={cn(
+          "min-w-0 flex-1 pb-5 pt-3",
+          flagged && "-ml-2 border-l-2 border-danger/40 pl-3"
+        )}
+      >
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
           <span className="text-sm font-semibold text-foreground">
             {/* У записи участия должности нет — заголовком служит сама роль
