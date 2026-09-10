@@ -90,8 +90,8 @@ export interface EmploymentSummary {
   longest?: { company: string; months: number };
   /** Перерывы длиннее месяца — короткие разрывы это оформление, а не простой. */
   gaps: Gap[];
-  /** Пары записей, действовавших одновременно. */
-  overlaps: Array<[Employment, Employment]>;
+  /** Наибольшее число одновременно действовавших договоров и дата пика. */
+  concurrent?: { count: number; on: Date; records: Employment[] };
   first?: Date;
   /**
    * Сколько человек не работает на дату выгрузки.
@@ -109,10 +109,14 @@ export function summarize(list: Employment[] = []): EmploymentSummary {
     .filter((x): x is { r: Employment; p: Period } => x.p !== null)
     .sort((a, b) => a.p.from.getTime() - b.p.from.getTime());
 
+  /* Участие в организации — не работа: доля в ТОО стажа не даёт, и в расчёт
+     срока, перерывов и незанятости такие записи не входят. */
+  const worked = withPeriod.filter((x) => x.r.kind !== "participation");
+
   /* Объединяем пересекающиеся отрезки: стаж — это календарное время, а не
      сумма договоров. Иначе совместительство удваивает результат. */
   const merged: Period[] = [];
-  for (const { p } of withPeriod) {
+  for (const { p } of worked) {
     const last = merged[merged.length - 1];
     if (last && p.from.getTime() <= last.to.getTime()) {
       if (p.to > last.to) last.to = p.to;
@@ -127,35 +131,51 @@ export function summarize(list: Employment[] = []): EmploymentSummary {
     if (months >= 1) gaps.push({ from: merged[i - 1].to, to: merged[i].from, months });
   }
 
-  const overlaps: Array<[Employment, Employment]> = [];
-  for (let i = 0; i < withPeriod.length; i += 1) {
-    for (let j = i + 1; j < withPeriod.length; j += 1) {
-      const a = withPeriod[i];
-      const b = withPeriod[j];
-      if (b.p.from < a.p.to && a.p.from < b.p.to) overlaps.push([a.r, b.r]);
+  /*
+    Считаем не пары пересечений, а пик одновременности.
+    «7 пар» ничего не говорит: четыре параллельных договора дают шесть пар, и
+    число растёт быстрее сути. «4 договора одновременно на такую-то дату» —
+    проверяемое утверждение, и его можно пойти и сверить.
+  */
+  let concurrent: EmploymentSummary["concurrent"];
+  for (const { p } of worked) {
+    const on = p.from;
+    const at = worked.filter((x) => x.p.from <= on && on < x.p.to);
+    if (at.length > 1 && at.length > (concurrent?.count ?? 1)) {
+      concurrent = { count: at.length, on, records: at.map((x) => x.r) };
     }
   }
 
   const byCompany = new Map<string, number>();
-  for (const { r } of withPeriod) {
+  for (const { r } of worked) {
     byCompany.set(r.company, (byCompany.get(r.company) ?? 0) + durationOf(r));
   }
   const longest = [...byCompany.entries()].sort((a, b) => b[1] - a[1])[0];
 
   const last = merged[merged.length - 1];
   const idle =
-    last && !withPeriod.some((x) => x.p.open) && monthsBetween(last.to, AS_OF_DATE) >= 1
+    last && !worked.some((x) => x.p.open) && monthsBetween(last.to, AS_OF_DATE) >= 1
       ? { since: last.to, months: monthsBetween(last.to, AS_OF_DATE) }
       : undefined;
 
+  /*
+    В ленте сверху то, что закончилось позже всех, а действующее — раньше
+    всего прочего. Сортировка по дате начала ставила бы текущую работу вниз,
+    если человек устроился туда давно: карточку открывают ради «где он
+    сейчас», а не ради самого раннего договора.
+  */
+  const records = [...withPeriod]
+    .sort((a, b) => b.p.to.getTime() - a.p.to.getTime() || b.p.from.getTime() - a.p.from.getTime())
+    .map((x) => x.r);
+
   return {
-    records: withPeriod.map((x) => x.r).reverse(),
-    active: withPeriod.filter((x) => x.p.open).map((x) => x.r),
+    records,
+    active: worked.filter((x) => x.p.open).map((x) => x.r),
     totalMonths: merged.reduce((s, p) => s + monthsBetween(p.from, p.to), 0),
     employers: byCompany.size,
     longest: longest ? { company: longest[0], months: longest[1] } : undefined,
     gaps,
-    overlaps,
+    concurrent,
     first: merged[0]?.from,
     idle,
   };

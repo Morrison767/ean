@@ -84,7 +84,7 @@ function buildRows(people: Person[], companies: Company[]): SubjectRow[] {
       /* Действующий договор точнее, чем currentJob: тот в фикстурах местами
          расходится с историей занятости. */
       role:
-        p.employment?.find((e) => !e.end)?.position ??
+        p.employment?.find((e) => !e.end && e.kind !== "participation")?.position ??
         p.currentJob?.position ??
         "—",
       risk: p.riskLevel,

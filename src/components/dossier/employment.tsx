@@ -20,6 +20,7 @@ import {
   CalendarClock,
   Database,
   FileText,
+  Landmark,
   Layers,
   TimerReset,
 } from "lucide-react";
@@ -42,6 +43,11 @@ import {
 import { cn } from "@/lib/utils";
 import { useApp } from "@/store/use-app";
 import type { Employment, Person } from "@/data/types";
+
+/** «ТОО «EIDE Software Solutions»» → «EIDE Software Solutions»: в плитке нужен
+    сам работодатель, а организационная форма только съедает строку. */
+const shortName = (name: string) =>
+  name.replace(/^(ТОО|АО|ИП|ГУ|АОО)\s+/u, "").replace(/[«»"]/g, "");
 
 export function EmploymentTab({ person }: { person: Person }) {
   const companies = useApp((s) => s.db.companies);
@@ -84,14 +90,16 @@ export function EmploymentTab({ person }: { person: Person }) {
           icon={FileText}
           tone={summary.active.length > 1 ? "warning" : "brand"}
         />
+        {/* Не «дольше всего N лет»: у того, кто всю карьеру на одном месте, это
+            число совпадало бы с общим стажем, и плитка не сообщала бы ничего. */}
         <KpiTile
-          label="Дольше всего"
-          value={summary.longest ? humanMonths(summary.longest.months) : "—"}
+          label="Основной работодатель"
+          value={summary.longest ? shortName(summary.longest.company) : "—"}
           icon={Briefcase}
         />
       </div>
 
-      {(summary.idle || summary.overlaps.length > 0 || longestGap || uniqueRisky.length > 0) && (
+      {(summary.idle || summary.concurrent || longestGap || uniqueRisky.length > 0) && (
         <div className="grid gap-3 lg:grid-cols-3">
           {summary.idle && (
             <Insight
@@ -102,13 +110,15 @@ export function EmploymentTab({ person }: { person: Person }) {
               detail={`последний договор прекращён ${formatDate(summary.idle.since)}`}
             />
           )}
-          {summary.overlaps.length > 0 && (
+          {summary.concurrent && (
             <Insight
               icon={Layers}
               tone="warning"
-              title="Одновременные договоры"
-              value={counted(summary.overlaps.length, "пара", "пары", "пар")}
-              detail={`${summary.overlaps[0][0].company} и ${summary.overlaps[0][1].company} — периоды пересекаются`}
+              title="Работал в нескольких местах сразу"
+              value={counted(summary.concurrent.count, "договор", "договора", "договоров")}
+              detail={`одновременно на ${formatDate(summary.concurrent.on)}: ${summary.concurrent.records
+                .map((r) => r.company)
+                .join(", ")}`}
             />
           )}
           {longestGap && (
@@ -156,8 +166,9 @@ export function EmploymentTab({ person }: { person: Person }) {
       <p className="flex items-start gap-2 px-1 text-xs text-muted-foreground">
         <Database className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>
-          Источник: Электронная биржа труда Enbek.kz (ЕСУТД) и госреестр ИП. Выгрузка на {AS_OF}.
-          Открытые договоры посчитаны к этой дате, а не к сегодняшней.
+          Источник: Электронная биржа труда Enbek.kz (ЕСУТД), госреестр ИП и ГБД ЮЛ. Выгрузка
+          на {AS_OF} — открытые договоры посчитаны к этой дате, а не к сегодняшней. Участие в
+          организации без должности показано для полноты картины, но в стаж не входит.
         </span>
       </p>
     </Stagger>
@@ -175,6 +186,11 @@ function Row({
 }) {
   const open = !record.end;
   const months = durationOf(record);
+  const participation = record.kind === "participation";
+  /* ИП — не отдельное юрлицо, досье у него нет. А БИН у него совпадает с ИИН
+     владельца и в этих фикстурах местами равен БИН его же ТОО, так что ссылка
+     увела бы в чужую карточку. Поэтому связываем только организации. */
+  const linkable = record.kind === "contract";
   const details: Array<[string, string | undefined]> = [
     ["Договор", record.contract],
     ["Код НКЗ", record.nkz],
@@ -193,7 +209,11 @@ function Row({
         <span
           className={cn(
             "h-3 w-3 shrink-0 rounded-full border-2",
-            open ? "border-success bg-success" : "border-border-strong bg-card"
+            participation
+            ? "border-hue-violet bg-card"
+            : open
+              ? "border-success bg-success"
+              : "border-border-strong bg-card"
           )}
         />
         {!last && <span className="mt-1 w-px flex-1 bg-border" />}
@@ -201,26 +221,57 @@ function Row({
 
       <div className="min-w-0 flex-1 pb-5 pt-3">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          <span className="text-sm font-semibold text-foreground">{record.position}</span>
-          {open && (
+          <span className="text-sm font-semibold text-foreground">
+            {/* У записи участия должности нет — заголовком служит сама роль
+                владения, иначе «Учредитель» повторяется дважды подряд. */}
+            {participation ? (record.ownership ?? record.position) : record.position}
+          </span>
+          {open && !participation && (
             <Badge tone="success" size="sm">
               Действует
             </Badge>
           )}
-          {record.contractType === "Индивидуальное предпринимательство" && (
+          {record.kind === "entrepreneur" && (
             <Badge tone="indigo" size="sm">
               ИП
+            </Badge>
+          )}
+          {participation && (
+            <Badge tone="violet" size="sm">
+              Участие, без должности
+            </Badge>
+          )}
+          {record.status && (
+            <Badge tone="outline" size="sm">
+              {record.status}
             </Badge>
           )}
         </div>
 
         <p className="mt-0.5 text-sm text-muted-foreground">
-          <CompanyLink name={record.company} bin={record.bin} />
+          {linkable ? (
+            <CompanyLink name={record.company} bin={record.bin} />
+          ) : (
+            record.company
+          )}
         </p>
+
+        {/* Роль владения из ГБД ЮЛ — рядом с должностью, а не в другой вкладке:
+            «ведущий специалист» и «учредитель 20 %» это об одной организации. */}
+        {record.ownership && !participation && (
+          <p className="mt-1 flex items-center gap-1.5 text-xs text-hue-violet">
+            <Landmark className="h-3.5 w-3.5 shrink-0" />
+            {record.ownership}
+          </p>
+        )}
 
         <p className="mt-1 text-xs tabular-nums text-muted-foreground">
           {record.start} — {record.end ?? "по настоящее время"}
-          <span className="text-faint"> · {humanMonths(months)}</span>
+          <span className="text-faint">
+            {" · "}
+            {humanMonths(months)}
+            {participation && " · в стаж не входит"}
+          </span>
         </p>
 
         <dl className="mt-2.5 grid grid-cols-1 gap-x-6 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
