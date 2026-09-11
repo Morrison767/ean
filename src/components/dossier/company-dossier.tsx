@@ -38,6 +38,7 @@ import {
 import { Screen } from "@/components/app/screen";
 import { OpenInModule } from "@/components/dossier/person-dossier";
 import { Checklist } from "@/components/dossier/checklist";
+import { Findings } from "@/components/dossier/findings";
 import { DataList, Field } from "@/components/dossier/data-list";
 import { ScoreMeter } from "@/components/dossier/score-meter";
 import {
@@ -64,6 +65,7 @@ import {
   TableWrap,
 } from "@/components/ui/table";
 import { RISK_TAG_LABEL } from "@/config/dashboard";
+import { companyRisks } from "@/lib/company-risks";
 import { money, moneyFull, num, usd } from "@/lib/format";
 import { motionTokens } from "@/lib/motion";
 import { companyCase } from "@/lib/utils";
@@ -107,6 +109,8 @@ export function CompanyDossier({
   const tab = params.get("tab") ?? "trust";
   const setTab = (id: string) =>
     router.replace(`/company/${company.id}?tab=${id}`, { scroll: false });
+
+  const risks = useMemo(() => companyRisks(company, db.companies), [company, db.companies]);
 
   /* Записи реестров, относящиеся к этой компании. */
   const related = useMemo(
@@ -206,13 +210,27 @@ export function CompanyDossier({
               className="flex flex-col gap-4"
             >
               {tab === "trust" && (
-                <Checklist
-                  sections={checklist}
-                  flags={company.reliabilityFlags ?? []}
-                  checks={company.reliabilityChecks ?? []}
-                  hasSource={() => true}
-                  onOpenSource={(item) => setSource(sourceForCompany(company, item))}
-                />
+                <div className="flex flex-col gap-5">
+                  {/*
+                    Сначала — что система нашла сама, потом чек-лист реестров.
+                    Чек-лист отвечает «какие отметки стоят», находки — «что из
+                    них не сходится между собой»; порядок обратный сбил бы
+                    аналитика на перебор тридцати пунктов.
+                  */}
+                  <Findings
+                    findings={risks}
+                    title="Реальность хозяйственной деятельности"
+                    subtitle="Сверка оборота, налогов, активов и штата между собой"
+                    emptyText="Расхождений между оборотом, налогами, активами и штатом не найдено."
+                  />
+                  <Checklist
+                    sections={checklist}
+                    flags={company.reliabilityFlags ?? []}
+                    checks={company.reliabilityChecks ?? []}
+                    hasSource={() => true}
+                    onOpenSource={(item) => setSource(sourceForCompany(company, item))}
+                  />
+                </div>
               )}
               {tab === "basic" && <GeneralTab company={company} />}
               {tab === "licenses" && <LicensesTab company={company} />}

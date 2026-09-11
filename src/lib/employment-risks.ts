@@ -13,22 +13,15 @@
  */
 
 import { RISK_TAG_FULL } from "@/config/dashboard";
+import { bySeverity, type RiskFinding } from "@/lib/findings";
 import { money } from "@/lib/format";
 import { parseDate, periodOf } from "@/lib/employment";
 import type { Database } from "@/data/seed";
 import type { Company, Employment, Person } from "@/data/types";
 
-export interface EmploymentRisk {
-  id: string;
-  title: string;
-  severity: "high" | "medium";
-  /** Проверяемые факты, из которых складывается находка. */
-  evidence: string[];
-  /** Куда пойти сверять. */
-  link?: { label: string; href: string };
-  /** Записи занятости, которых находка касается: подсвечиваем их в ленте. */
-  records: string[];
-}
+/** Находка по занятости — общий вид с остальными разборами, плюс обязательная
+    привязка к записям: их подсвечивают прямо в ленте. */
+export type EmploymentRisk = RiskFinding & { records: string[] };
 
 /** Ключ записи в ленте — тот же, что и в разметке. */
 export const recordKey = (r: Employment): string => `${r.contract ?? r.company}-${r.start}`;
@@ -298,6 +291,5 @@ export function employmentRisks(person: Person, db: Database): EmploymentRisk[] 
     });
   }
 
-  /* Тяжёлые сверху; внутри — порядок появления, он тематический. */
-  return out.sort((a, b) => (a.severity === b.severity ? 0 : a.severity === "high" ? -1 : 1));
+  return out.sort(bySeverity);
 }

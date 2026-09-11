@@ -13,19 +13,17 @@
  * и у каждой записи подписано, откуда она.
  */
 
-import Link from "next/link";
 import {
-  ArrowUpRight,
   Briefcase,
   CalendarClock,
   Database,
   FileText,
   Landmark,
   ShieldAlert,
-  ShieldCheck,
   TimerReset,
 } from "lucide-react";
 
+import { Findings } from "@/components/dossier/findings";
 import { CompanyLink } from "@/components/dossier/subject-link";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -79,25 +77,12 @@ export function EmploymentTab({ person }: { person: Person }) {
         <KpiTile label="Общий стаж" value={humanMonths(summary.totalMonths)} icon={TimerReset} />
       </div>
 
-      {risks.length > 0 ? (
-        <SectionCard
-          icon={ShieldAlert}
-          title="Риски по трудовой биографии"
-          subtitle="Связки с закупками, госорганами и реестром юрлиц"
-          collapsible={false}
-        >
-          <ul className="flex flex-col">
-            {risks.map((risk) => (
-              <Finding key={risk.id} risk={risk} />
-            ))}
-          </ul>
-        </SectionCard>
-      ) : (
-        <p className="flex items-center gap-2 rounded-12 border border-border bg-surface px-3.5 py-3 text-sm text-muted-foreground">
-          <ShieldCheck className="h-4 w-4 shrink-0 text-icon-success" />
-          Связок с закупками, госорганами и проблемными юрлицами по трудовой биографии не найдено.
-        </p>
-      )}
+      <Findings
+        findings={risks}
+        title="Риски по трудовой биографии"
+        subtitle="Связки с закупками, госорганами и реестром юрлиц"
+        emptyText="Связок с закупками, госорганами и проблемными юрлицами по трудовой биографии не найдено."
+      />
 
       <SectionCard
         icon={Briefcase}
@@ -130,49 +115,6 @@ export function EmploymentTab({ person }: { person: Person }) {
         </span>
       </p>
     </Stagger>
-  );
-}
-
-/**
- * Находка.
- *
- * Заголовок называет нарушение, ниже — факты, из которых оно сложилось, и
- * ссылка на реестр, где их можно сверить. Без фактов и ссылки это было бы
- * обвинением без доказательства, а решение по субъекту принимает человек.
- */
-function Finding({ risk }: { risk: EmploymentRisk }) {
-  const high = risk.severity === "high";
-  return (
-    <li className="flex gap-3 border-b border-border px-4 py-3.5 last:border-0 sm:px-5">
-      <ShieldAlert
-        className={cn("mt-0.5 h-4.5 w-4.5 shrink-0", high ? "text-icon-danger" : "text-icon-warning")}
-        strokeWidth={1.8}
-      />
-      <div className="flex min-w-0 flex-col gap-1.5">
-        <span className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-semibold text-foreground">{risk.title}</span>
-          <Badge tone={high ? "danger" : "warning"} size="sm">
-            {high ? "Высокий риск" : "Средний риск"}
-          </Badge>
-        </span>
-        <ul className="flex flex-col gap-1">
-          {risk.evidence.map((e) => (
-            <li key={e} className="text-xs leading-relaxed text-muted-foreground">
-              {e}
-            </li>
-          ))}
-        </ul>
-        {risk.link && (
-          <Link
-            href={risk.link.href}
-            className="mt-0.5 inline-flex w-fit items-center gap-1 text-xs font-medium text-link transition-colors hover:text-link-hover"
-          >
-            {risk.link.label}
-            <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
-          </Link>
-        )}
-      </div>
-    </li>
   );
 }
 
